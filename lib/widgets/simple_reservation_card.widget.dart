@@ -1,0 +1,135 @@
+import 'package:flutter/material.dart';
+
+class SimpleReservationCard extends StatelessWidget {
+  const SimpleReservationCard(
+      {Key? key,
+      required this.address,
+      required this.room,
+      required this.time,
+      required this.statusCode})
+      : super(key: key);
+
+  final String address;
+  final String room;
+  final String time;
+  final String statusCode;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.black26),
+      ),
+      height: 72,
+      width: MediaQuery.of(context).size.width,
+      child: InkWell(
+        onTap: () {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(const SnackBar(content: Text('reservasi')));
+        },
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              width: 5,
+              color: colorStatusCode(statusCode),
+            ),
+            Expanded(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const SizedBox(width: 8),
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                            style: const TextStyle(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14),
+                            address),
+                        Text(
+                            style: const TextStyle(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                            room)
+                      ]),
+                  const SizedBox(width: 16),
+                  Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                            style: TextStyle(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.w400,
+                                fontSize: 14),
+                            'Pukul'),
+                        Text(
+                            style: const TextStyle(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16),
+                            time)
+                      ]),
+                ],
+              ),
+            ),
+            Container(
+              decoration: BoxDecoration(
+                  color: colorStatusCode(statusCode),
+                  borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(6),
+                      bottomLeft: Radius.circular(6))),
+              padding: const EdgeInsets.all(8),
+              height: 40,
+              width: 150,
+              child: Text(
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14),
+                textStatus(statusCode),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Color colorStatusCode(String code) {
+    switch (code) {
+      case '0':
+        return Colors.red;
+      case '1':
+        return Colors.blue;
+      case '2':
+        return Colors.orange;
+      case '3':
+        return Colors.green;
+      default:
+        return Colors.transparent;
+    }
+  }
+
+  String textStatus(String code){
+    switch (code) {
+      case '0':
+        return 'Batal';
+      case '1':
+        return 'Akan datang';
+      case '2':
+        return 'Sedang berlangsung';
+      case '3':
+        return 'Selesai';
+      default:
+        return 'Lainnya';
+    }
+  }
+}

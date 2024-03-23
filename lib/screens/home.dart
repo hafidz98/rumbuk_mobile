@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:id_rumbuk_app/widgets/news_card.widget.dart';
+import 'package:id_rumbuk_app/widgets/simple_reservation_card.widget.dart';
+import 'package:id_rumbuk_app/widgets/simple_user_profile.widget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -7,7 +11,13 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
+void showLayoutGuidelines() {
+  debugPaintSizeEnabled = true;
+}
+
 class _HomeScreenState extends State<HomeScreen> {
+  int hasReservation = 2;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,41 +30,11 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 24),
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.account_circle,
-                      size: 65,
-                      color: Colors.black54,
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              style: TextStyle(
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 16),
-                              'studentName'),
-                          Text(
-                              style: TextStyle(
-                                  color: Colors.black87,
-                                  fontWeight: FontWeight.normal,
-                                  fontSize: 16),
-                              'studentIdNumber')
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-                const SizedBox(
-                  height: 24,
-                ),
+                const SimpleUserProfile(
+                    profileImageUrl: 'https://picsum.photos/200',
+                    profileUsername: 'Adnan Rzifka',
+                    profileUserID: '24201003'),
+                const SizedBox(height: 24),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -67,117 +47,27 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(
                       height: 8,
                     ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: Colors.black26),
-                      ),
-                      height: 72,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            width: 5,
-                            color: Colors.orange,
-                          ),
-                          Expanded(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          style: TextStyle(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 14),
-                                          'Gedung A Lantai 1'),
-                                      Text(
-                                          style: TextStyle(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                          'Ruang A101')
-                                    ]),
-                                const SizedBox(
-                                  width: 16,
-                                ),
-                                Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          style: TextStyle(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.w400,
-                                              fontSize: 14),
-                                          'Pukul'),
-                                      Text(
-                                          style: TextStyle(
-                                              color: Colors.black87,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 16),
-                                          '07:00')
-                                    ]),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                                color: Colors.orange,
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(6),
-                                    bottomLeft: Radius.circular(6))),
-                            padding: const EdgeInsets.all(8),
-                            height: 40,
-                            width: 150,
-                            child: Text(
-                              overflow: TextOverflow.ellipsis,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14),
-                              'Sedang berlangsung',
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: Colors.black26),
-                      ),
-                      height: 72,
-                      width: MediaQuery.of(context).size.width,
-                      child: const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.info_outline_rounded, size: 32),
-                          SizedBox(
-                            width: 16,
-                          ),
-                          Text(
-                              maxLines: 2,
-                              'Belum ada reservasi nih\nYuk, lakukan peminjaman'),
-                        ],
-                      ),
-                    ),
+                    if (hasReservation <= 0)
+                      emptyReservationInfoCard()
+                    else
+                      ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: 1,
+                          itemBuilder: (context, index) =>
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: SimpleReservationCard(
+                                    address: 'Gedung 1 Lantai 2',
+                                    room: 'Ruangan 121',
+                                    time: '07:15',
+                                    statusCode: index.toString()),
+                              ),)
                   ],
                 ),
-                const SizedBox(
-                  height: 24,
-                ),
+                const SizedBox(height: 24),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                         style: TextStyle(
@@ -185,269 +75,53 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontWeight: FontWeight.bold,
                             fontSize: 18),
                         'Berita'),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      margin: EdgeInsets.only(bottom: 8),
-                      height: 70,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Container(width: 70,decoration: BoxDecoration(color: Colors.grey,
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          ),
-                          SizedBox(width: 8,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 14),'28 Januari 2024'),
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    'Lorem ipsum sit dolor amet constecture elex trea afas amet constecture elex trea afas dera neritosa arko')
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 8,),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 8),
-                      height: 70,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Container(color: Colors.grey,width: 70,
-                          ),
-                          SizedBox(width: 8,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 14),'28 Januari 2024'),
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    'Lorem ipsum sit dolor amet constecture elex trea afas amet constecture elex trea afas dera neritosa arko')
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 8,),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 8),
-                      height: 70,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Container(color: Colors.grey,width: 70,
-                          ),
-                          SizedBox(width: 8,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 14),'28 Januari 2024'),
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    'Lorem ipsum sit dolor amet constecture elex trea afas amet constecture elex trea afas dera neritosa arko')
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 8,),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 8),
-                      height: 70,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Container(color: Colors.grey,width: 70,
-                          ),
-                          SizedBox(width: 8,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 14),'28 Januari 2024'),
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    'Lorem ipsum sit dolor amet constecture elex trea afas amet constecture elex trea afas dera neritosa arko')
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 8,),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 8),
-                      height: 70,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Container(color: Colors.grey,width: 70,
-                          ),
-                          SizedBox(width: 8,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 14),'28 Januari 2024'),
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    'Lorem ipsum sit dolor amet constecture elex trea afas amet constecture elex trea afas dera neritosa arko')
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 8,),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 8),
-                      height: 70,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Container(color: Colors.grey,width: 70,
-                          ),
-                          SizedBox(width: 8,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 14),'28 Januari 2024'),
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    'Lorem ipsum sit dolor amet constecture elex trea afas amet constecture elex trea afas dera neritosa arko')
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 8,),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 8),
-                      height: 70,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Container(color: Colors.grey,width: 70,
-                          ),
-                          SizedBox(width: 8,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 14),'28 Januari 2024'),
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    'Lorem ipsum sit dolor amet constecture elex trea afas amet constecture elex trea afas dera neritosa arko')
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 8,),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 8),
-                      height: 70,
-                      width: MediaQuery.of(context).size.width,
-                      child: Row(
-                        children: [
-                          Container(color: Colors.grey,width: 70,
-                          ),
-                          SizedBox(width: 8,),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.normal,
-                                    fontSize: 14),'28 Januari 2024'),
-                                Text(style: TextStyle(
-                                    color: Colors.black87,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16),
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    'Lorem ipsum sit dolor amet constecture elex trea afas amet constecture elex trea afas dera neritosa arko')
-                              ],
-                            ),
-                          ),
-                          SizedBox(width: 8,),
-                        ],
-                      ),
+                    const SizedBox(height: 8),
+                    ListView(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      children: generateFakePosts(),
                     ),
                   ],
                 ),
+                const SizedBox(height: 24),
               ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  Widget emptyReservationInfoCard() {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(4),
+        border: Border.all(color: Colors.black26),
+      ),
+      height: 72,
+      width: MediaQuery.of(context).size.width,
+      child: const Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.info_outline_rounded, size: 32),
+          SizedBox(
+            width: 16,
+          ),
+          Text(maxLines: 2, 'Belum ada reservasi nih\nYuk, lakukan peminjaman'),
+        ],
+      ),
+    );
+  }
+
+  List<Widget> generateFakePosts() {
+    final posts = <Widget>[];
+    for (var i = 1; i <= 5; i++) {
+      posts.add(const NewsCard(
+          newsUrl: 'www.google.com',
+          newsTitle: 'Google: mainstream search engine over global',
+          newsDate: '20 Jan 24'));
+      posts.add(const Divider());
+    }
+    return posts;
   }
 }
