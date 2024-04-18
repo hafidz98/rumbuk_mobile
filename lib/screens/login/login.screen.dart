@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:id_rumbuk_app/screens/login/login.controller.dart';
+import 'package:id_rumbuk_app/services/service_locator.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -8,10 +10,12 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final stateManager = getIt<LoginScreenController>();
+
   final _userIdentityFieldController = TextEditingController();
   final _passwordFieldController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  bool _passwordObscure = true;
+  //bool _passwordObscure = true;
 
   var _isLoading = false;
 
@@ -19,14 +23,20 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _isLoading = true);
     Future.delayed(
       const Duration(seconds: 3),
-          () => setState(() => _isLoading = false),
+      () => setState(() => _isLoading = false),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   void dispose() {
     _userIdentityFieldController.dispose();
     _passwordFieldController.dispose();
+
     super.dispose();
   }
 
@@ -64,10 +74,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                 color: Colors.black87,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 18),
-                            'Silakan masuk untuk melakukan peminjaman ruangan'),
-                        const SizedBox(
-                          height: 36,
-                        ),
+                            'Silakan masuk untuk meminjaman ruangan'),
+                        const SizedBox(height: 36),
                         TextFormField(
                           validator: (value) => (value == null || value.isEmpty)
                               ? '*mohon isi identitas anda'
@@ -78,24 +86,23 @@ class _LoginScreenState extends State<LoginScreen> {
                               hintText: 'Masukkan NPM atau Surel anda',
                               labelText: 'NPM atau Surel'),
                         ),
-                        const SizedBox(
-                          height: 16,
-                        ),
+                        const SizedBox(height: 16),
                         TextFormField(
                           validator: (value) => (value == null || value.isEmpty)
                               ? '*mohon isi kata sandi anda'
                               : null,
                           controller: _passwordFieldController,
-                          obscureText: _passwordObscure,
+                          obscureText: stateManager.passwordObscure.value,
                           decoration: InputDecoration(
+
                               border: const OutlineInputBorder(),
                               hintText: 'Masukkan kata sandi anda',
                               suffixIcon: IconButton(
                                   style: const ButtonStyle(
                                       splashFactory: NoSplash.splashFactory),
-                                  onPressed: () => setState(() =>
-                                  _passwordObscure = !_passwordObscure),
-                                  icon: Icon(_passwordObscure
+                                  onPressed: () => setState(
+                                      () => stateManager.obscurePassword()),
+                                  icon: Icon(stateManager.passwordObscure.value
                                       ? Icons.visibility_off
                                       : Icons.visibility)),
                               labelText: 'Kata sandi'),
@@ -107,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             TextButton(
                               onPressed: () => ScaffoldMessenger.of(context)
                                   .showSnackBar(
-                                  const SnackBar(content: Text("Oke"))),
+                                      const SnackBar(content: Text("Oke"))),
                               style: TextButton.styleFrom(),
                               child: const Text('Ubah kata sandi'),
                             )
@@ -116,61 +123,54 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(
                           height: 32,
                         ),
-                        FilledButton.icon(
-                          onPressed: () {
-                            final snackBar = SnackBar(
-                              behavior: SnackBarBehavior.floating,
-                              content: Text(
-                                  'Yay! A SnackBar! ${_userIdentityFieldController.text} ${_passwordFieldController.text} '),
-                              action: SnackBarAction(
-                                label: 'Undo',
-                                onPressed: () {
-                                  // Some code to undo the change.
-                                },
-                              ),
+                        ValueListenableBuilder<ButtonState>(
+                          valueListenable: stateManager.loginButtonNotifier,
+                          builder: (BuildContext context, buttonState,
+                              Widget? child) {
+                            return FilledButton(
+                              onPressed: () {
+                                final done = buttonState;
+                                const snackBar = SnackBar(
+                                  behavior: SnackBarBehavior.floating,
+                                  content: Text('Berhasil login'),
+                                );
+                                if (_formKey.currentState!.validate()) {
+                                  if (buttonState == ButtonState.initial) {
+                                    stateManager.login();
+                                  }
+                                }
+                              },
+                              style: style,
+                              child: (buttonState == ButtonState.loading)
+                                  ? Container(
+                                      width: 24,
+                                      height: 24,
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: const CircularProgressIndicator(
+                                        color: Colors.white,
+                                        strokeWidth: 3,
+                                      ),
+                                    )
+                                  : const Text('Masuk',
+                                      style: TextStyle(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700,
+                                          letterSpacing: .5)),
                             );
-
-                            // Find the ScaffoldMessenger in the widget tree
-                            // and use it to show a SnackBar.
-                            if (_formKey.currentState!.validate()) {
-                              if (!_isLoading) {
-                                _onSubmit();
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(snackBar);
-                              } else {
-                                null;
-                              }
-                            }
                           },
-                          style: style,
-                          icon: _isLoading
-                              ? Container(
-                            width: 24,
-                            height: 24,
-                            padding: const EdgeInsets.all(2.0),
-                            child: const CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 3,
-                            ),
-                          )
-                              : const SizedBox.shrink(),
-                          label: const Text('Masuk',
-                              style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: .5)),
                         )
                       ],
                     ),
                   ),
                 ),
                 const Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(style: TextStyle(color: Colors.black38), 'ver1.0.0'),
-                      ],
-                    )),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(style: TextStyle(color: Colors.black38), 'ver1.0.0'),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),

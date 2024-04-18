@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:id_rumbuk_app/screens/home.dart';
+import 'package:id_rumbuk_app/screens/home/home.screen.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter/foundation.dart';
+import 'package:id_rumbuk_app/screens/login/login.screen.dart';
 import 'package:id_rumbuk_app/screens/profile.dart';
-import 'package:id_rumbuk_app/screens/reservation.dart';
-import 'package:id_rumbuk_app/screens/status.dart';
+import 'package:id_rumbuk_app/screens/reservation/reservation.screen.dart';
+import 'package:id_rumbuk_app/screens/status/status.screen.dart';
+import 'package:id_rumbuk_app/services/service_locator.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,6 +15,7 @@ Future main() async {
       defaultTargetPlatform == TargetPlatform.android) {
     await InAppWebViewController.setWebContentsDebuggingEnabled(kDebugMode);
   }
+  setupGetIt();
   runApp(const MyApp());
 }
 
@@ -38,6 +41,8 @@ class _MyAppState extends State<MyApp> {
       home: Scaffold(
         body: const [HomeScreen(),ReservationScreen(), StatusScreen(), ProfileScreen()][selectedPageIndex],
         bottomNavigationBar: NavigationBar(
+          labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+          height: MediaQuery.of(context).size.height * 0.09,
           destinations: const <NavigationDestination>[
             NavigationDestination(
               selectedIcon: Icon(Icons.home),

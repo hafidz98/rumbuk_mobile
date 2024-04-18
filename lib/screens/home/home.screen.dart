@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     address: 'Gedung 1 Lantai 2',
                                     room: 'Ruangan 121',
                                     time: '07:15',
-                                    statusCode: index.toString()),
+                                    statusCode: (index + 3).toString()),
                               ),)
                   ],
                 ),
