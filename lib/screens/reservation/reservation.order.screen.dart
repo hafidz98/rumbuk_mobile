@@ -27,7 +27,7 @@ class _ReservationOrderState extends State<ReservationOrder> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('Ruang', style: Theme.of(context).textTheme.titleMedium),
-                Text('Ruang A101', style: Theme.of(context).textTheme.bodyLarge),
+                Text('Ruang A101\nGedung 1, Lantai 2', style: Theme.of(context).textTheme.bodyLarge, textAlign: TextAlign.end),
               ],
             ),
             const SizedBox(height: 8),

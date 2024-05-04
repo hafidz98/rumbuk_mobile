@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:id_rumbuk_app/screens/login/login.controller.dart';
-import 'package:id_rumbuk_app/services/service_locator.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -10,7 +10,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final stateManager = getIt<LoginScreenController>();
+  final LoginController _controller = Get.put(LoginController());
 
   final _userIdentityFieldController = TextEditingController();
   final _passwordFieldController = TextEditingController();
@@ -66,6 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   padding: const EdgeInsets.all(16),
                   child: Form(
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     key: _formKey,
                     child: Column(
                       children: [
@@ -92,17 +93,16 @@ class _LoginScreenState extends State<LoginScreen> {
                               ? '*mohon isi kata sandi anda'
                               : null,
                           controller: _passwordFieldController,
-                          obscureText: stateManager.passwordObscure.value,
+                          obscureText: _controller.passwordObscure.value,
                           decoration: InputDecoration(
-
                               border: const OutlineInputBorder(),
                               hintText: 'Masukkan kata sandi anda',
                               suffixIcon: IconButton(
                                   style: const ButtonStyle(
                                       splashFactory: NoSplash.splashFactory),
                                   onPressed: () => setState(
-                                      () => stateManager.obscurePassword()),
-                                  icon: Icon(stateManager.passwordObscure.value
+                                      () => _controller.obscurePassword()),
+                                  icon: Icon(_controller.passwordObscure.value
                                       ? Icons.visibility_off
                                       : Icons.visibility)),
                               labelText: 'Kata sandi'),
@@ -124,19 +124,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 32,
                         ),
                         ValueListenableBuilder<ButtonState>(
-                          valueListenable: stateManager.loginButtonNotifier,
+                          valueListenable: _controller.loginButtonNotifier,
                           builder: (BuildContext context, buttonState,
                               Widget? child) {
                             return FilledButton(
-                              onPressed: () {
-                                final done = buttonState;
+                              onPressed: () async {
                                 const snackBar = SnackBar(
                                   behavior: SnackBarBehavior.floating,
                                   content: Text('Berhasil login'),
                                 );
-                                if (_formKey.currentState!.validate()) {
+                                if (_formKey.currentState?.validate() ?? false) {
+                                  FocusManager.instance.primaryFocus?.unfocus();
                                   if (buttonState == ButtonState.initial) {
-                                    stateManager.login();
+                                    await _controller.login(_userIdentityFieldController.text, _passwordFieldController.text);
                                   }
                                 }
                               },

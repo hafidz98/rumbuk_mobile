@@ -39,6 +39,9 @@ dependencies:
   url_launcher: ^6.2.4
   get_it: ^7.6.4
   easy_date_timeline: ^1.0.6
+  get: ^4.6.6
+  get_storage: ^2.1.1
+  flutter_native_splash: ^2.3.7
 
 dev_dependencies:
   flutter_test:
@@ -50,7 +53,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
-  flutter_native_splash: ^2.3.7
+
 
 
 # For information on the generic Dart part of this file, see the

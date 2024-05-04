@@ -4,5 +4,5 @@ import 'package:id_rumbuk_app/screens/login/login.controller.dart';
 final getIt = GetIt.instance;
 
 void setupGetIt(){
-  getIt.registerLazySingleton<LoginScreenController>(() => LoginScreenController());
+  getIt.registerLazySingleton<LoginController>(() => LoginController());
 }

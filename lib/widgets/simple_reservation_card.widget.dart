@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:id_rumbuk_app/screens/status/status_detail.screen.dart';
 
 class SimpleReservationCard extends StatelessWidget {
   const SimpleReservationCard(
@@ -25,6 +26,15 @@ class SimpleReservationCard extends StatelessWidget {
       width: MediaQuery.of(context).size.width,
       child: InkWell(
         onTap: () {
+          showModalBottomSheet(
+            isScrollControlled: true,
+            showDragHandle: true,
+            useSafeArea: true,
+            shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                    top: Radius.circular(32))),
+            context: context,
+            builder: (context) => const ReservationDetail(),);
           ScaffoldMessenger.of(context)
               .showSnackBar(const SnackBar(content: Text('reservasi')));
         },
@@ -116,7 +126,7 @@ class SimpleReservationCard extends StatelessWidget {
       case '3':
         return Colors.green;
       default:
-        return Colors.transparent;
+        return Colors.grey;
     }
   }
 

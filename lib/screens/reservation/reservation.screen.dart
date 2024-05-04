@@ -7,17 +7,10 @@ import '../../widgets/custom_chip.widget.dart';
 class ReservationScreen extends StatelessWidget {
   const ReservationScreen({Key? key}) : super(key: key);
 
-  final bool _isTimeOfRoomSelected = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      floatingActionButton: _isTimeOfRoomSelected
-          ? CustomFloatingActionButton(
-              onPressed: () {}, label: 'Pilih ruangan ini')
-          : const SizedBox.shrink(),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -34,15 +27,17 @@ class ReservationScreen extends StatelessWidget {
               ),
             ),
             const Divider(height: 0),
-            Flexible(
-              child: ListView(
+            Expanded(
+              child: ListView.builder(
+                primary: false,
+                itemCount: 10,
                 padding:
                     const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                children: List<Widget>.generate(
-                    10,
-                    (index) => RoomContentCard(
-                          indexF: (index + 1),
-                        )).toList(),
+                itemBuilder: (context, index) {
+                  return RoomContentCard(
+                    indexF: (index + 1),
+                  );
+                },
               ),
             ),
           ],
@@ -91,11 +86,12 @@ class RoomContentCard extends StatelessWidget {
                           isScrollControlled: true,
                           showDragHandle: true,
                           useSafeArea: true,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(32))),
-                            context: context,
-                            builder: (context) => ReservationOrder());
+                          shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(32))),
+                          context: context,
+                          builder: (context) => const ReservationOrder(),
+                        );
                       },
                       child: FittedBox(
                           fit: BoxFit.fitWidth,
@@ -214,5 +210,3 @@ class _BuildingChipButtonState extends State<BuildingChipButton> {
     );
   }
 }
-
-
