@@ -16,6 +16,17 @@ mixin CacheController {
     final box = GetStorage();
     await box.remove(CacheControllerKey.token.toString());
   }
+
+  Future<bool> saveStudentId(String? studentId) async {
+    final box = GetStorage();
+    await box.write(CacheControllerKey.studentId.toString(), studentId);
+    return true;
+  }
+
+  String? getStudentId(){
+    final box = GetStorage();
+    return box.read(CacheControllerKey.studentId.toString());
+  }
 }
 
-enum CacheControllerKey { token }
+enum CacheControllerKey { token, studentId }

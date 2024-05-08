@@ -27,7 +27,3 @@ class GenericResponse {
     "data": data,
   };
 }
-
-abstract class Serializable {
-  Map<String, dynamic> toJson();
-}

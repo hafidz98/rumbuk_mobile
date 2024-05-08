@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/get_state_manager.dart';
 import 'package:id_rumbuk_app/auth/auth.controller.dart';
 import 'package:id_rumbuk_app/screens/login/dto/login.request.dart';
 import 'package:id_rumbuk_app/screens/login/login.service.dart';
 
-class LoginController extends GetxController {
+class LoginController extends GetxController{
   late final LoginService _loginService;
   late final AuthController _authController;
 
@@ -20,7 +19,7 @@ class LoginController extends GetxController {
         LoginRequest(emailOrStudentId: emailOrStudentId, password: password));
 
     if (response != null) {
-      _authController.login(response);
+      _authController.login(response.token, response.studentId);
       loginButtonNotifier.value = ButtonState.done;
     } else {
       Get.defaultDialog(

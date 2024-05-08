@@ -42,6 +42,8 @@ dependencies:
   get: ^4.6.6
   get_storage: ^2.1.1
   flutter_native_splash: ^2.3.7
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.9.0
 
 dev_dependencies:
   flutter_test:
@@ -53,6 +55,9 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
+  build_runner: ^2.4.9
+  freezed: ^2.5.2
+  json_serializable: ^6.8.0
 
 
 

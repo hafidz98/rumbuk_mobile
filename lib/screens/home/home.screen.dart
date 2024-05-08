@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:id_rumbuk_app/auth/auth.controller.dart';
+import 'package:id_rumbuk_app/model/entity/student.entity.dart';
+import 'package:id_rumbuk_app/screens/home/home.controller.dart';
 import 'package:id_rumbuk_app/widgets/news_card.widget.dart';
 import 'package:id_rumbuk_app/widgets/simple_reservation_card.widget.dart';
 import 'package:id_rumbuk_app/widgets/simple_user_profile.widget.dart';
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
 
 void showLayoutGuidelines() {
   debugPaintSizeEnabled = true;
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  final AuthController _authController = Get.find();
-  int hasReservation = 2;
+class HomeScreen extends GetView<HomeController> {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  //final AuthController _authController = Get.find();
+  //final HomeController _controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
+    HomeController controller = Get.put(HomeController());
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -33,10 +32,15 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 24),
-                const SimpleUserProfile(
-                    profileImageUrl: 'https://picsum.photos/200',
-                    profileUsername: 'Adnan Rzifka',
-                    profileUserID: '24201003'),
+                Obx(() {
+                  return SimpleUserProfile(
+                      profileImageUrl: 'https://picsum.photos/200',
+                      profileUsername:
+                      controller.studentData.value.name ?? 'studentName',
+                      profileUserID:
+                      controller.studentData.value.studentId ?? 'studentId');
+                }),
+
                 const SizedBox(height: 24),
                 //Text(),
                 Column(
@@ -51,8 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(
                       height: 8,
                     ),
-                    if (hasReservation <= 0)
-                      emptyReservationInfoCard()
+                    if (controller.hasReservation <= 0)
+                      emptyReservationInfoCard(context)
                     else
                       ListView.builder(
                         shrinkWrap: true,
@@ -84,7 +88,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Flexible(
                       fit: FlexFit.loose,
                       child: ListView.separated(
-                        primary: false,
+                          primary: false,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             return const NewsCard(
@@ -112,7 +116,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget emptyReservationInfoCard() {
+  Widget emptyReservationInfoCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),

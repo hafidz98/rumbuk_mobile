@@ -9,9 +9,18 @@ class AuthController extends GetxController with CacheController {
     removeToken();
   }
 
-  void login(String? token) async {
+  void login(String? token, studentId) async {
     isLogged.value = true;
     await saveToken(token);
+    await saveStudentId(studentId);
+  }
+
+  String? getStudentIdFromBox(){
+    final studentId = getStudentId();
+    if(studentId != null){
+      return studentId;
+    }
+    return "";
   }
 
   void checkLoginStatus(){
