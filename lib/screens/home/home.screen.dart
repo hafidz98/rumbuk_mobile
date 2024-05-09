@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:id_rumbuk_app/auth/auth.controller.dart';
+import 'package:id_rumbuk_app/model/entity/student.entity.dart';
+import 'package:id_rumbuk_app/screens/home/home.controller.dart';
 import 'package:id_rumbuk_app/widgets/news_card.widget.dart';
 import 'package:id_rumbuk_app/widgets/simple_reservation_card.widget.dart';
 import 'package:id_rumbuk_app/widgets/simple_user_profile.widget.dart';
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
 
 void showLayoutGuidelines() {
   debugPaintSizeEnabled = true;
 }
 
-class _HomeScreenState extends State<HomeScreen> {
-  int hasReservation = 2;
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({Key? key}) : super(key: key);
+
+  //final AuthController _authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    HomeController controller = Get.put(HomeController());
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -30,11 +31,16 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 24),
-                const SimpleUserProfile(
-                    profileImageUrl: 'https://picsum.photos/200',
-                    profileUsername: 'Adnan Rzifka',
-                    profileUserID: '24201003'),
+                Obx(() {
+                  return SimpleUserProfile(
+                      profileImageUrl: 'https://picsum.photos/200',
+                      profileUsername:
+                      controller.studentData.value.name ?? 'studentName',
+                      profileUserID:
+                      controller.studentData.value.studentId ?? 'studentId');
+                }),
                 const SizedBox(height: 24),
+                //Text(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -47,27 +53,28 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(
                       height: 8,
                     ),
-                    if (hasReservation <= 0)
-                      emptyReservationInfoCard()
+                    if (controller.hasReservation <= 0)
+                      emptyReservationInfoCard(context)
                     else
                       ListView.builder(
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 1,
-                          itemBuilder: (context, index) =>
-                              Padding(
-                                padding: const EdgeInsets.only(bottom: 8),
-                                child: SimpleReservationCard(
-                                    address: 'Gedung 1 Lantai 2',
-                                    room: 'Ruangan 121',
-                                    time: '07:15',
-                                    statusCode: index.toString()),
-                              ),)
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: 1,
+                        itemBuilder: (context, index) => Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: SimpleReservationCard(
+                              address: 'Gedung 1 Lantai 2',
+                              room: 'Ruangan 121',
+                              time: '07:15',
+                              statusCode: (index + 3).toString()),
+                        ),
+                      )
                   ],
                 ),
                 const SizedBox(height: 24),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     const Text(
                         style: TextStyle(
@@ -76,11 +83,26 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontSize: 18),
                         'Berita'),
                     const SizedBox(height: 8),
-                    ListView(
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      children: generateFakePosts(),
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: ListView.separated(
+                          primary: false,
+                          shrinkWrap: true,
+                          itemBuilder: (context, index) {
+                            return const NewsCard(
+                                newsUrl: 'www.google.com',
+                                newsTitle:
+                                    'Google: mainstream search engine over global',
+                                newsDate: '20 Jan 24');
+                          },
+                          separatorBuilder: (context, index) => const Divider(),
+                          itemCount: 5),
                     ),
+                    // ListView(
+                    //   physics: const NeverScrollableScrollPhysics(),
+                    //   shrinkWrap: true,
+                    //   children: generateFakePosts(),
+                    // ),
                   ],
                 ),
                 const SizedBox(height: 24),
@@ -92,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget emptyReservationInfoCard() {
+  Widget emptyReservationInfoCard(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(4),
