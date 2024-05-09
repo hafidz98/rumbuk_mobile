@@ -20,7 +20,14 @@ class HomeController extends GetxController {
     super.onInit();
     _homeService = Get.put(HomeService());
     _authController = Get.find();
+
     await getStudent();
+    await getReservation();
+  }
+
+  @override
+  void refresh() {
+    studentData.refresh();
   }
 
   Future<void> getStudent() async {
@@ -31,8 +38,7 @@ class HomeController extends GetxController {
         _authController.getToken(), _authController.getStudentIdFromBox());
 
     if (response != null) {
-      studentData = _mapper.toStudent(response).obs;
-      //return _mapper.toStudent(response);
+      studentData.value = _mapper.toStudent(response);
       studentData.refresh();
     } else {
       Get.defaultDialog(
@@ -50,11 +56,9 @@ class HomeController extends GetxController {
       print(studentId);
       print(studentData.value.studentId);
     }
-    //return throw Error();
   }
 
-  @override
-  void refresh() {
-    studentData.refresh();
+  Future<void> getReservation() async {
+    hasReservation.value = 1;
   }
 }

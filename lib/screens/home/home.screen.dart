@@ -13,11 +13,10 @@ void showLayoutGuidelines() {
   debugPaintSizeEnabled = true;
 }
 
-class HomeScreen extends GetView<HomeController> {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
   //final AuthController _authController = Get.find();
-  //final HomeController _controller = Get.put(HomeController());
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +39,6 @@ class HomeScreen extends GetView<HomeController> {
                       profileUserID:
                       controller.studentData.value.studentId ?? 'studentId');
                 }),
-
                 const SizedBox(height: 24),
                 //Text(),
                 Column(
