@@ -1,7 +1,7 @@
 class ApiConfig {
   static const String baseUrl = String.fromEnvironment(
     'API_BASE_URL',
-    defaultValue: 'http://192.168.1.10:8991$app',
+    defaultValue: 'http://192.168.1.28:8991$app',
   );
   static const String app = '/v1/rumbuk';
   static const String auth = '/auth';

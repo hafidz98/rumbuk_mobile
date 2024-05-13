@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:id_rumbuk_app/auth/auth.controller.dart';
+import 'package:id_rumbuk_app/auth/auth.local.controller.dart';
 import 'package:id_rumbuk_app/screens/home/home.screen.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter/foundation.dart';
@@ -30,6 +31,8 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final AuthController _authController = Get.put(AuthController());
+  final AuthLocalController _authLocalController =
+      Get.put(AuthLocalController());
 
   @override
   void initState() {
@@ -39,9 +42,11 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> initializeSettings() async {
     _authController.checkLoginStatus();
+    _authController.checkPINStatus();
+    _authLocalController.checkFingerprintStatus();
 
     //Simulate other services for 3 seconds
-    await Future.delayed(const Duration(seconds: 3));
+    //await Future.delayed(const Duration(seconds: 3));
     FlutterNativeSplash.remove();
   }
 
@@ -78,9 +83,13 @@ class _MyAppState extends State<MyApp> {
               return Scaffold(
                   body: Center(child: Text('Error: ${snapshot.error}')));
             } else {
-              return Obx(() => _authController.isLogged.value
-                  ? const ScreenHolder()
-                  : const LoginScreen());
+              return Obx(
+                () {
+                  return _authController.isLogged.value
+                      ? const ScreenHolder()
+                      : const LoginScreen();
+                },
+              );
             }
           }
         },
@@ -98,9 +107,15 @@ class ScreenHolder extends StatefulWidget {
 
 class _ScreenHolderState extends State<ScreenHolder> {
   int selectedPageIndex = 0;
+  final AuthController _authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    if (_authController.isPINActive.value && !_authController.isUnlock.value) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _authController.unlock(context);
+      });
+    }
     return Scaffold(
       body: const [
         HomeScreen(),
@@ -143,3 +158,5 @@ class _ScreenHolderState extends State<ScreenHolder> {
     );
   }
 }
+
+//todo: invalid or expired token refresh

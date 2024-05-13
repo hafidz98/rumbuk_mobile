@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:id_rumbuk_app/auth/auth.controller.dart';
 import 'package:id_rumbuk_app/screens/login/login.controller.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -11,32 +12,16 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final LoginController _controller = Get.put(LoginController());
+  final AuthController _authController = Get.find();
 
   final _userIdentityFieldController = TextEditingController();
   final _passwordFieldController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  //bool _passwordObscure = true;
-
-  var _isLoading = false;
-
-  void _onSubmit() {
-    setState(() => _isLoading = true);
-    Future.delayed(
-      const Duration(seconds: 3),
-      () => setState(() => _isLoading = false),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void dispose() {
     _userIdentityFieldController.dispose();
     _passwordFieldController.dispose();
-
     super.dispose();
   }
 
@@ -66,7 +51,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   padding: const EdgeInsets.all(16),
                   child: Form(
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     key: _formKey,
                     child: Column(
                       children: [
@@ -107,19 +91,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                       : Icons.visibility)),
                               labelText: 'Kata sandi'),
                         ),
-                        Row(
-                          children: [
-                            const Text('Lupa kata sandi?',
-                                style: TextStyle(color: Colors.black54)),
-                            TextButton(
-                              onPressed: () => ScaffoldMessenger.of(context)
-                                  .showSnackBar(
-                                      const SnackBar(content: Text("Oke"))),
-                              style: TextButton.styleFrom(),
-                              child: const Text('Ubah kata sandi'),
-                            )
-                          ],
-                        ),
+                        // Row(
+                        //   children: [
+                        //     const Text('Lupa kata sandi?',
+                        //         style: TextStyle(color: Colors.black54)),
+                        //     TextButton(
+                        //       onPressed: () => ScaffoldMessenger.of(context)
+                        //           .showSnackBar(
+                        //               const SnackBar(content: Text("Oke"))),
+                        //       style: TextButton.styleFrom(),
+                        //       child: const Text('Ubah kata sandi'),
+                        //     )
+                        //   ],
+                        // ),
                         const SizedBox(
                           height: 32,
                         ),
@@ -133,10 +117,14 @@ class _LoginScreenState extends State<LoginScreen> {
                                   behavior: SnackBarBehavior.floating,
                                   content: Text('Berhasil login'),
                                 );
-                                if (_formKey.currentState?.validate() ?? false) {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
                                   FocusManager.instance.primaryFocus?.unfocus();
                                   if (buttonState == ButtonState.initial) {
-                                    await _controller.login(_userIdentityFieldController.text, _passwordFieldController.text);
+                                    await _controller.login(
+                                        _userIdentityFieldController.text,
+                                        _passwordFieldController.text);
+                                    snackBar;
                                   }
                                 }
                               },
@@ -147,15 +135,15 @@ class _LoginScreenState extends State<LoginScreen> {
                                       height: 24,
                                       padding: const EdgeInsets.all(2.0),
                                       child: const CircularProgressIndicator(
-                                        color: Colors.white,
-                                        strokeWidth: 3,
-                                      ),
+                                          color: Colors.white, strokeWidth: 3),
                                     )
-                                  : const Text('Masuk',
+                                  : const Text(
+                                      'Masuk',
                                       style: TextStyle(
                                           fontSize: 20,
                                           fontWeight: FontWeight.w700,
-                                          letterSpacing: .5)),
+                                          letterSpacing: .5),
+                                    ),
                             );
                           },
                         )

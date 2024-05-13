@@ -4,14 +4,12 @@ import 'package:id_rumbuk_app/auth/auth.controller.dart';
 import 'package:id_rumbuk_app/screens/login/dto/login.request.dart';
 import 'package:id_rumbuk_app/screens/login/login.service.dart';
 
-class LoginController extends GetxController{
+class LoginController extends GetxController {
   late final LoginService _loginService;
   late final AuthController _authController;
 
   final loginButtonNotifier = ValueNotifier<ButtonState>(ButtonState.initial);
   final passwordObscure = ValueNotifier<bool>(false);
-
-  //var _isLoading = false;
 
   Future<void> login(String emailOrStudentId, String password) async {
     loginButtonNotifier.value = ButtonState.loading;
@@ -21,6 +19,8 @@ class LoginController extends GetxController{
     if (response != null) {
       _authController.login(response.token, response.studentId);
       loginButtonNotifier.value = ButtonState.done;
+      // const SnackBar(
+      //     behavior: SnackBarBehavior.floating, content: Text('Berhasil login'));
     } else {
       Get.defaultDialog(
         middleText: 'User not found!',
@@ -30,11 +30,8 @@ class LoginController extends GetxController{
           Get.back();
         },
       );
-      loginButtonNotifier.value = ButtonState.done;
+      loginButtonNotifier.value = ButtonState.initial;
     }
-
-    // await Future.delayed(const Duration(seconds: 3),
-    //     () => loginButtonNotifier.value = ButtonState.done);
   }
 
   void obscurePassword() {
