@@ -4,6 +4,7 @@ import 'package:id_rumbuk_app/exception/network.exception.dart';
 import 'package:id_rumbuk_app/model/dto/api.config.dart';
 import 'package:id_rumbuk_app/screens/reservation/dto/avail_room_response.dart';
 import 'package:id_rumbuk_app/screens/reservation/dto/building_response.dart';
+import 'package:id_rumbuk_app/screens/reservation/dto/reservation_create_request.dart';
 
 class ReservationService extends GetConnect {
   final String apiEndpoint = ApiConfig.baseUrl;
@@ -59,22 +60,24 @@ class ReservationService extends GetConnect {
     }
   }
 
-  Future<void> createReservation(String? token, body) async {
+  Future<void> createReservation(String? token, req) async {
     Map<String, String> requestHeader = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
       'X-JWT-TOKEN-KEY': '$token'
     };
 
+    printInfo(info: '> createReservation(): [reqdata]:$req');
+
     try {
-      final response = await post(apiEndpoint, body, headers: requestHeader);
+      final response = await post('$apiEndpoint${ApiConfig.reservation}', req, headers: requestHeader);
 
       if (response.statusCode != null && response.statusCode! >= 400) {
         throw NetworkException(
           statusCode: response.statusCode!,
           message: response.statusText!,
         );
-      } else if (response.statusCode != null) {}
+      }
     } catch (e) {
       throw FormatException(e.toString());
     }

@@ -38,18 +38,21 @@ class ReservationScreen extends StatelessWidget {
                   // var data = reservationController
                   //     .buildingRoomList[reservationController.selectedChipButton.value].floors!.length;
                   return ListView.builder(
-                  primary: false,
-                  itemCount: reservationController
-                      .buildingRoomList[reservationController.selectedChipButton.value].floors!.length,
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                  itemBuilder: (context, index) {
-                    return RoomContentCard(
-                      indexB: reservationController.selectedChipButton.value,
-                      indexF: index,
-                    );
-                  },
-                );
+                    primary: false,
+                    itemCount: reservationController
+                        .buildingRoomList[
+                            reservationController.selectedChipButton.value]
+                        .floors!
+                        .length,
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    itemBuilder: (context, index) {
+                      return RoomContentCard(
+                        indexB: reservationController.selectedChipButton.value,
+                        indexF: index,
+                      );
+                    },
+                  );
                 },
               ),
             ),
@@ -98,33 +101,39 @@ class RoomContentCard extends StatelessWidget {
                 runSpacing: 4,
                 direction: Axis.horizontal,
                 children: List.generate(
-                    reservationController
-                        .buildingRoomList[indexB].floors![indexF].rooms!.length,
-                    (index) => OutlinedButton(
-                        style: OutlinedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            visualDensity: VisualDensity.compact,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(4))),
-                        onPressed: () {
-                          showModalBottomSheet(
-                            isScrollControlled: true,
-                            showDragHandle: true,
-                            useSafeArea: true,
-                            shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.vertical(
-                                    top: Radius.circular(32))),
-                            context: context,
-                            builder: (context) => const ReservationOrder(),
-                          );
-                        },
-                        child: FittedBox(
-                            fit: BoxFit.fitWidth,
-                            child: Text(reservationController
-                                .buildingRoomList[indexB]
-                                .floors![indexF]
-                                .rooms![index]
-                                .name!)))),
+                  reservationController
+                      .buildingRoomList[indexB].floors![indexF].rooms!.length,
+                  (index) => OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        visualDensity: VisualDensity.compact,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4))),
+                    onPressed: () async {
+                      await showModalBottomSheet(
+                        isScrollControlled: true,
+                        showDragHandle: true,
+                        useSafeArea: true,
+                        shape: const RoundedRectangleBorder(
+                            borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(32))),
+                        context: context,
+                        builder: (context) => ReservationOrder(
+                          indexB: indexB,
+                          indexF: indexF,
+                          indexR: index,
+                        ),
+                      );
+                    },
+                    child: FittedBox(
+                        fit: BoxFit.fitWidth,
+                        child: Text(reservationController
+                            .buildingRoomList[indexB]
+                            .floors![indexF]
+                            .rooms![index]
+                            .name!)),
+                  ),
+                ),
               ),
             ),
           ),

@@ -1,11 +1,12 @@
 import 'package:easy_date_timeline/easy_date_timeline.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-//import 'package:get/get_rx/get_rx.dart';
 import 'package:id_rumbuk_app/auth/auth.controller.dart';
 import 'package:id_rumbuk_app/exception/mapper.exception.dart';
 import 'package:id_rumbuk_app/screens/reservation/dto/avail_room_response.dart'
     as avr;
 import 'package:id_rumbuk_app/screens/reservation/dto/building_response.dart';
+import 'package:id_rumbuk_app/screens/reservation/dto/reservation_create_request.dart';
 import 'package:id_rumbuk_app/screens/reservation/entity/building.dart';
 import 'package:id_rumbuk_app/screens/reservation/reservation.service.dart';
 import 'package:intl/intl.dart';
@@ -13,10 +14,15 @@ import 'package:intl/intl.dart';
 class ReservationController extends GetxController {
   late final AuthController _authController;
   late final ReservationService _reservationService;
-  late final BuildingMapper _buildingMapper = BuildingMapper();
+
+  var activityControllerText = TextEditingController();
+
+  //late final BuildingMapper _buildingMapper = BuildingMapper();
+  late ReservationCreateRequest reqData = ReservationCreateRequest();
 
   late RxList<BuildingEntity> buildingList =
       List<BuildingEntity>.empty(growable: true).obs;
+
   late RxList<avr.Building> buildingRoomList =
       List<avr.Building>.empty(growable: true).obs;
   late RxList<avr.Floor> floorRoomList =
@@ -33,6 +39,12 @@ class ReservationController extends GetxController {
   RxInt selectedChipButton = 0.obs;
   RxInt selectedBuildingId = 0.obs;
 
+  RxInt selectedRoomTimeIndex = 0.obs;
+  RxBool isSelectedRoomTimeButton = false.obs;
+  RxInt selectedRTSID = 0.obs;
+
+
+
   // @override
   // void onReady() async {
   //   await _getAvailRoomData();
@@ -45,7 +57,7 @@ class ReservationController extends GetxController {
     _authController = Get.find();
     selectedDate = focusDate;
 
-    await _getBuildingData();
+    //await _getBuildingData();
     await _getAvailRoomData();
 
     //getRoomOnBuildingID(selectedBuildingId.value);
@@ -57,15 +69,15 @@ class ReservationController extends GetxController {
     //printInfo(info: 'data lantai2:${floorRoomList[0].name}');
   }
 
-  Future<void> _getBuildingData() async {
-    var buildings =
-        await _reservationService.fetchBuilding(_authController.getToken());
-
-    if (buildings.data!.isNotEmpty) {
-      var data = _buildingMapper.toBuildingEntities(buildings.data!);
-      buildingList.assignAll(data);
-    }
-  }
+  // Future<void> _getBuildingData() async {
+  //   var buildings =
+  //       await _reservationService.fetchBuilding(_authController.getToken());
+  //
+  //   if (buildings.data!.isNotEmpty) {
+  //     var data = _buildingMapper.toBuildingEntities(buildings.data!);
+  //     buildingList.assignAll(data);
+  //   }
+  // }
 
   Future<void> _getAvailRoomData() async {
     var date = DateFormat('yyyy-MM-dd');
@@ -84,7 +96,38 @@ class ReservationController extends GetxController {
     }
   }
 
-  // Future<void> getFloors() async {
+  Future<void> makeReservation() async{
+    var activityText = activityControllerText.text;
+    var date = selectedDate.timeZoneOffset.inHours;
+    Map<String, dynamic> reqData = ReservationCreateRequest(
+      studentId: _authController.getStudentIdFromBox(),
+      activity: activityText,
+      bookingDate: selectedDate,
+      roomTimeslotId: selectedRTSID.value,
+    ).toJson();
+
+    // printInfo(info: '> makeReservation(): [studentId]:${reqData['student_id']}');
+    // printInfo(info: '> makeReservation(): [activity]:${reqData['activity']}');
+    // printInfo(info: '> makeReservation(): [bookingDate]:${reqData['booking_date']}');
+    // printInfo(info: '> makeReservation(): [roomTimeslotId]:${reqData['room_timeslot_id']}');
+
+    printInfo(info: '> makeReservation(): [reqdata]:$reqData');
+
+    try {
+      await _reservationService.createReservation(_authController.getToken(), reqData);
+    } catch (e){
+      throw Exception(e.toString());
+    }
+
+    activityControllerText.clear();
+  }
+
+  // @override
+  // void onClose() {
+  //   activityControllerText.dispose();
+  // }
+
+// Future<void> getFloors() async {
   //   final List<avr.Floor> floors = [];
   //
   //   try {

@@ -50,6 +50,7 @@ class HomeController extends GetxController {
       //       Get.back();
       //     });
     }
+    studentData.refresh();
 
     if (kDebugMode) {
       print(response);

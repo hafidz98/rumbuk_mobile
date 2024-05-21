@@ -105,7 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         //   ],
                         // ),
                         const SizedBox(
-                          height: 32,
+                          height: 32
                         ),
                         ValueListenableBuilder<ButtonState>(
                           valueListenable: _controller.loginButtonNotifier,
