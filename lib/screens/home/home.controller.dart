@@ -41,13 +41,14 @@ class HomeController extends GetxController {
       studentData.value = _mapper.toStudent(response);
       studentData.refresh();
     } else {
-      Get.defaultDialog(
-          middleText: 'User not found!',
-          textConfirm: 'OK',
-          onConfirm: () {
-            refresh();
-            Get.back();
-          });
+      _authController.logOut();
+      // Get.defaultDialog(
+      //     middleText: 'User not found!',
+      //     textConfirm: 'OK',
+      //     onConfirm: () {
+      //       refresh();
+      //       Get.back();
+      //     });
     }
 
     if (kDebugMode) {

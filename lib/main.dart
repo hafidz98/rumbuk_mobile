@@ -3,6 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:id_rumbuk_app/auth/auth.controller.dart';
 import 'package:id_rumbuk_app/auth/auth.local.controller.dart';
+import 'package:id_rumbuk_app/screens/home/home.controller.dart';
 import 'package:id_rumbuk_app/screens/home/home.screen.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter/foundation.dart';
@@ -31,6 +32,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   final AuthController _authController = Get.put(AuthController());
+  final HomeController _controller = Get.put(HomeController());
   final AuthLocalController _authLocalController =
       Get.put(AuthLocalController());
 
@@ -41,6 +43,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   Future<void> initializeSettings() async {
+    _controller.getStudent();
     _authController.checkLoginStatus();
     _authController.checkPINStatus();
     _authLocalController.checkFingerprintStatus();
@@ -117,7 +120,7 @@ class _ScreenHolderState extends State<ScreenHolder> {
       });
     }
     return Scaffold(
-      body: const [
+      body: [
         HomeScreen(),
         ReservationScreen(),
         StatusScreen(),

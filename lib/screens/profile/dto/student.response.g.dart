@@ -6,9 +6,8 @@ part of 'student.response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$StudentResponseImpl _$$StudentResponseImplFromJson(
-        Map<String, dynamic> json) =>
-    _$StudentResponseImpl(
+StudentResponse _$StudentResponseFromJson(Map<String, dynamic> json) =>
+    StudentResponse(
       studentId: json['student_id'] as String?,
       name: json['name'] as String?,
       gender: json['gender'] as String?,
@@ -19,8 +18,7 @@ _$StudentResponseImpl _$$StudentResponseImplFromJson(
       email: json['email'] as String?,
     );
 
-Map<String, dynamic> _$$StudentResponseImplToJson(
-        _$StudentResponseImpl instance) =>
+Map<String, dynamic> _$StudentResponseToJson(StudentResponse instance) =>
     <String, dynamic>{
       'student_id': instance.studentId,
       'name': instance.name,

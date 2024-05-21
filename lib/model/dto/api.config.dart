@@ -10,5 +10,6 @@ class ApiConfig {
   static const String building = '/building';
   static const String floor = '/floor';
   static const String room = '/room';
+  static const String availableRoom = '/available-room';
   static const String articles = '/articles';
 }
