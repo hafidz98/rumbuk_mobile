@@ -17,7 +17,8 @@ class ReservationController extends GetxController {
 
   var activityControllerText = TextEditingController();
 
-  //late final BuildingMapper _buildingMapper = BuildingMapper();
+  final reservationLoading = false.obs;
+
   late ReservationCreateRequest reqData = ReservationCreateRequest();
 
   late RxList<BuildingEntity> buildingList =
@@ -43,13 +44,6 @@ class ReservationController extends GetxController {
   RxBool isSelectedRoomTimeButton = false.obs;
   RxInt selectedRTSID = 0.obs;
 
-
-
-  // @override
-  // void onReady() async {
-  //   await _getAvailRoomData();
-  // }
-
   @override
   void onInit() async {
     super.onInit();
@@ -57,106 +51,60 @@ class ReservationController extends GetxController {
     _authController = Get.find();
     selectedDate = focusDate;
 
-    //await _getBuildingData();
-    await _getAvailRoomData();
-
-    //getRoomOnBuildingID(selectedBuildingId.value);
+    await getAvailRoomData();
 
     printInfo(info: selectedDate.toString());
     printInfo(info: selectedBuildingId.value.toString());
     printInfo(info: 'data lantai:${buildingRoomList[0].floors![0].name!}');
 
-    //printInfo(info: 'data lantai2:${floorRoomList[0].name}');
   }
 
-  // Future<void> _getBuildingData() async {
-  //   var buildings =
-  //       await _reservationService.fetchBuilding(_authController.getToken());
-  //
-  //   if (buildings.data!.isNotEmpty) {
-  //     var data = _buildingMapper.toBuildingEntities(buildings.data!);
-  //     buildingList.assignAll(data);
-  //   }
-  // }
-
-  Future<void> _getAvailRoomData() async {
+  Future<void> getAvailRoomData() async {
     var date = DateFormat('yyyy-MM-dd');
     final List<avr.Building> buildings = [];
 
     try {
+
       var buildingData = await _reservationService.fetchRoom(
           _authController.getToken(), date.format(selectedDate));
       for (int i = 0; i < buildingData.data!.buildings!.length; i++) {
         buildings.add(buildingData.data!.buildings![i]);
       }
-
+      buildingRoomList.clear();
       buildingRoomList.addAll(buildings);
     } catch (e) {
       throw Exception(e.toString());
     }
   }
 
-  Future<void> makeReservation() async{
+  Future<void> makeReservation(BuildContext context) async {
+    reservationLoading.value = true;
+
     var activityText = activityControllerText.text;
-    var date = selectedDate.timeZoneOffset.inHours;
-    Map<String, dynamic> reqData = ReservationCreateRequest(
+    var dateFormatted =
+        DateFormat("yyyy-MM-dd", 'id-ID').format(selectedDate);
+
+    var reqData = ReservationCreateRequest(
       studentId: _authController.getStudentIdFromBox(),
       activity: activityText,
-      bookingDate: selectedDate,
+      bookingDate: dateFormatted,
       roomTimeslotId: selectedRTSID.value,
-    ).toJson();
-
-    // printInfo(info: '> makeReservation(): [studentId]:${reqData['student_id']}');
-    // printInfo(info: '> makeReservation(): [activity]:${reqData['activity']}');
-    // printInfo(info: '> makeReservation(): [bookingDate]:${reqData['booking_date']}');
-    // printInfo(info: '> makeReservation(): [roomTimeslotId]:${reqData['room_timeslot_id']}');
+    );
 
     printInfo(info: '> makeReservation(): [reqdata]:$reqData');
 
     try {
-      await _reservationService.createReservation(_authController.getToken(), reqData);
-    } catch (e){
+      await _reservationService.createReservation(
+          _authController.getToken(), reqData.toJson());
+    } catch (e) {
       throw Exception(e.toString());
+    } finally {
+      activityControllerText.clear();
+      reservationLoading.value = false;
+      await getAvailRoomData();
+      if (context.mounted) Navigator.of(context).pop();
     }
-
-    activityControllerText.clear();
   }
-
-  // @override
-  // void onClose() {
-  //   activityControllerText.dispose();
-  // }
-
-// Future<void> getFloors() async {
-  //   final List<avr.Floor> floors = [];
-  //
-  //   try {
-  //     for (int i = 0; i < building.length; i++) {
-  //       var dataFloor = building[i].floors;
-  //       for (int j = 0; j < dataFloor!.length; j++) {
-  //         floors.add(dataFloor as avr.Floor);
-  //       }
-  //     }
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
-
-  // Future<void> getRoomOnBuildingID(int id) async {
-  //   final List<avr.Floor> floors = [];
-  //   try {
-  //     for (int i = 0; i < buildingRoomList.length; i++) {
-  //       if (buildingRoomList[i].id == id) {
-  //         for (int j = 0; j < buildingRoomList[i].floors!.length; j++) {
-  //           floors.add(buildingRoomList[i].floors![j]);
-  //         }
-  //         break;
-  //       }
-  //     }
-  //   } catch (e) {
-  //     throw Exception(e.toString());
-  //   }
-  // }
 }
 
 class BuildingMapper {

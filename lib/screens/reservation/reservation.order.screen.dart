@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_rumbuk_app/screens/reservation/reservation.controller.dart';
+import 'package:intl/intl.dart';
 
 import '../../widgets/custom_chip.widget.dart';
 
@@ -34,6 +35,7 @@ class _ReservationOrderState extends State<ReservationOrder> {
     var roomTimeSlot = reservationController.buildingRoomList[widget.indexB]
         .floors![widget.indexF].rooms![widget.indexR].timeSlot;
 
+    final dateFormatter = DateFormat('d MMMM yyyy');
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Padding(
@@ -69,7 +71,7 @@ class _ReservationOrderState extends State<ReservationOrder> {
                 children: [
                   Text('Tanggal Reservasi',
                       style: Theme.of(context).textTheme.titleMedium),
-                  Text(reservationController.selectedDate.day.toString(),
+                  Text(dateFormatter.format(reservationController.selectedDate),
                       style: Theme.of(context).textTheme.bodyLarge),
                 ],
               ),
@@ -143,10 +145,18 @@ class _ReservationOrderState extends State<ReservationOrder> {
                     shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(4)),
                   ),
-                  child: const Text('Pinjam ruangan ini'),
-                  onPressed: () {
+                  child: reservationController.reservationLoading.value
+                      ? Container(
+                          width: 24,
+                          height: 24,
+                          padding: const EdgeInsets.all(2.0),
+                          child: const CircularProgressIndicator(
+                              color: Colors.white, strokeWidth: 3),
+                        )
+                      : const Text('Pinjam ruangan ini'),
+                  onPressed: () async {
                     if (_formKey.currentState?.validate() ?? false) {
-                      reservationController.makeReservation();
+                      await reservationController.makeReservation(context);
                     }
                   })
             ],

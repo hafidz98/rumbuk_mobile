@@ -4,7 +4,6 @@ import 'package:id_rumbuk_app/exception/network.exception.dart';
 import 'package:id_rumbuk_app/model/dto/api.config.dart';
 import 'package:id_rumbuk_app/screens/reservation/dto/avail_room_response.dart';
 import 'package:id_rumbuk_app/screens/reservation/dto/building_response.dart';
-import 'package:id_rumbuk_app/screens/reservation/dto/reservation_create_request.dart';
 
 class ReservationService extends GetConnect {
   final String apiEndpoint = ApiConfig.baseUrl;
@@ -46,8 +45,6 @@ class ReservationService extends GetConnect {
     try {
       final response = await get('$apiEndpoint${ApiConfig.availableRoom}', headers: requestHeader, query: queryParam);
 
-      //printInfo(info: '');
-
       if (response.statusCode != null && response.statusCode! >= 400) {
         throw NetworkException(
           statusCode: response.statusCode!,
@@ -61,13 +58,14 @@ class ReservationService extends GetConnect {
   }
 
   Future<void> createReservation(String? token, req) async {
-    Map<String, String> requestHeader = {
+    var requestHeader = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
       'X-JWT-TOKEN-KEY': '$token'
     };
 
     printInfo(info: '> createReservation(): [reqdata]:$req');
+    // $apiEndpoint${ApiConfig.reservation}
 
     try {
       final response = await post('$apiEndpoint${ApiConfig.reservation}', req, headers: requestHeader);
@@ -83,7 +81,3 @@ class ReservationService extends GetConnect {
     }
   }
 }
-
-// get building data based on date
-// get room data based on building data
-// save reservation data to db using api service

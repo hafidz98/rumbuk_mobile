@@ -35,15 +35,23 @@ class ReservationScreen extends StatelessWidget {
             Expanded(
               child: Obx(
                 () {
-                  // var data = reservationController
-                  //     .buildingRoomList[reservationController.selectedChipButton.value].floors!.length;
+                  var itemFloors = reservationController
+                      .buildingRoomList[
+                          reservationController.selectedChipButton.value]
+                      .floors;
+                  // int itemCount = 0;
+                  // if (itemFloors != null ) {
+                  //   itemCount = itemFloors.length;
+                  // }
+                  // return FutureBuilder<void>(
+                  //   future: reservationController
+                  //       .buildingRoomList.length,
+                  //   builder: (context, snapshot) {
+                  //
+                  // },);
                   return ListView.builder(
                     primary: false,
-                    itemCount: reservationController
-                        .buildingRoomList[
-                            reservationController.selectedChipButton.value]
-                        .floors!
-                        .length,
+                    itemCount: itemFloors?.length ?? 0,
                     padding:
                         const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                     itemBuilder: (context, index) {
@@ -123,7 +131,9 @@ class RoomContentCard extends StatelessWidget {
                           indexF: indexF,
                           indexR: index,
                         ),
-                      );
+                      ).whenComplete(() => const SnackBar(
+                          behavior: SnackBarBehavior.floating,
+                          content: Text('Reservasi sukses')));
                     },
                     child: FittedBox(
                         fit: BoxFit.fitWidth,
@@ -192,8 +202,13 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
           (index) =>
               reservationController.appsFirstDate.add(Duration(days: index))),
       onDateChange: (selectedDate) {
+        // reservationController.focusDate = selectedDate;
+        // reservationController.selectedDate = selectedDate;
+        // debugPrint(selectedDate.toString());
         setState(() {
           reservationController.focusDate = selectedDate;
+          reservationController.selectedDate = selectedDate;
+          reservationController.getAvailRoomData();
           debugPrint(selectedDate.toString());
         });
       },
@@ -218,6 +233,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
       firstDate: reservationController.appsFirstDate,
       focusDate: reservationController.focusDate,
       lastDate: reservationController.appsLastDate,
+      locale: 'id_ID',
     );
   }
 }

@@ -6,7 +6,7 @@ part 'reservation_create_request.g.dart';
 @JsonSerializable()
 class ReservationCreateRequest {
   @JsonKey(name: "booking_date")
-  DateTime? bookingDate;
+  String? bookingDate;
   @JsonKey(name: "student_id")
   String? studentId;
   @JsonKey(name: "activity")
