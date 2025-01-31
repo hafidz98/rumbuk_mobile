@@ -8,11 +8,14 @@ import 'package:id_rumbuk_app/screens/profile/profile_detail.dart';
 import 'package:id_rumbuk_app/widgets/simple_user_profile.widget.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  ProfileScreen({Key? key}) : super(key: key);
+  final ProfileController _profileController = Get.put(ProfileController());
+  final AuthController _authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    ProfileController controller = Get.put(ProfileController());
+    //ProfileController controller = Get.put(ProfileController());
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -34,12 +37,12 @@ class ProfileScreen extends StatelessWidget {
                     Expanded(
                       child: Obx(
                         () => SimpleUserProfile(
-                            profileImageUrl: 'https://picsum.photos/200',
+                            profileImageUrl: '',
                             profileUsername:
-                                controller.studentData.value.name ??
+                                _profileController.studentData.value.name ??
                                     'studentName',
                             profileUserID:
-                                controller.studentData.value.studentId ??
+                                _profileController.studentData.value.studentId ??
                                     'studentId'),
                       ),
                     ),
@@ -54,14 +57,16 @@ class ProfileScreen extends StatelessWidget {
               const SizedBox(height: 8),
               const _PasscodeWidget(),
               const SizedBox(height: 4),
-              const _FingerprintWidget(),
+              //const _FingerprintWidget(),
               const Divider(height: 24),
               TextButton(
                   style: ButtonStyle(
                       splashFactory: InkSplash.splashFactory,
                       visualDensity: VisualDensity.compact,
                       padding: MaterialStateProperty.all(EdgeInsets.zero)),
-                  onPressed: () {},
+                  onPressed: () {
+                    _authController.logOut();
+                  },
                   child: const Text(
                     'Keluar',
                     style: TextStyle(
@@ -108,7 +113,7 @@ class _FingerprintWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    AuthLocalController authLocalController = Get.put(AuthLocalController());
+    AuthLocalController authLocalController = Get.find();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [

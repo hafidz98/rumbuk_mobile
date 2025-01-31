@@ -1,5 +1,5 @@
 import 'package:easy_date_timeline/easy_date_timeline.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_rumbuk_app/auth/auth.controller.dart';
 import 'package:id_rumbuk_app/exception/mapper.exception.dart';
@@ -56,7 +56,6 @@ class ReservationController extends GetxController {
     printInfo(info: selectedDate.toString());
     printInfo(info: selectedBuildingId.value.toString());
     printInfo(info: 'data lantai:${buildingRoomList[0].floors![0].name!}');
-
   }
 
   Future<void> getAvailRoomData() async {
@@ -64,7 +63,6 @@ class ReservationController extends GetxController {
     final List<avr.Building> buildings = [];
 
     try {
-
       var buildingData = await _reservationService.fetchRoom(
           _authController.getToken(), date.format(selectedDate));
       for (int i = 0; i < buildingData.data!.buildings!.length; i++) {
@@ -81,8 +79,7 @@ class ReservationController extends GetxController {
     reservationLoading.value = true;
 
     var activityText = activityControllerText.text;
-    var dateFormatted =
-        DateFormat("yyyy-MM-dd", 'id-ID').format(selectedDate);
+    var dateFormatted = DateFormat("yyyy-MM-dd", 'id-ID').format(selectedDate);
 
     var reqData = ReservationCreateRequest(
       studentId: _authController.getStudentIdFromBox(),
@@ -102,8 +99,18 @@ class ReservationController extends GetxController {
       activityControllerText.clear();
       reservationLoading.value = false;
       await getAvailRoomData();
-      if (context.mounted) Navigator.of(context).pop();
+      if (context.mounted) {
+        Navigator.of(context).pop();
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+            behavior: SnackBarBehavior.floating,
+            content: Text('Reservasi sukses')));
+      }
     }
+  }
+
+  @override
+  Future<void> refresh() async{
+    await getAvailRoomData();
   }
 }
 

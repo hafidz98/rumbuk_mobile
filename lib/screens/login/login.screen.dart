@@ -27,38 +27,30 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final ButtonStyle style = FilledButton.styleFrom(
-      textStyle: const TextStyle(fontSize: 20),
-      minimumSize: const Size.fromHeight(50),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
-    );
+    // final ButtonStyle style = FilledButton.styleFrom(
+    //   textStyle: const TextStyle(fontSize: 20),
+    //   minimumSize: const Size.fromHeight(50),
+    //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+    // );
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
-      body: SingleChildScrollView(
-        child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Column(
-              children: [
-                const Expanded(
-                    flex: 1, child: Center(child: Text('Rumbuk App'))),
-                Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    border: Border.all(color: Colors.black26),
-                  ),
-                  padding: const EdgeInsets.all(16),
-                  child: Form(
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: SizedBox(
+            height: MediaQuery.of(context).size.height,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+              child: Column(
+                children: [
+                  const Expanded(
+                      flex: 1, child: Center(child: Text('Rumbuk App'))),
+                  Form(
                     key: _formKey,
                     child: Column(
                       children: [
-                        const Text(
-                            style: TextStyle(
-                                color: Colors.black87,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18),
+                        Text(
+                            style: Theme.of(context).textTheme.headlineSmall,
                             'Silakan masuk untuk meminjaman ruangan'),
                         const SizedBox(height: 36),
                         TextFormField(
@@ -104,21 +96,18 @@ class _LoginScreenState extends State<LoginScreen> {
                         //     )
                         //   ],
                         // ),
-                        const SizedBox(
-                          height: 32
-                        ),
+                        const SizedBox(height: 32),
                         ValueListenableBuilder<ButtonState>(
                           valueListenable: _controller.loginButtonNotifier,
-                          builder: (BuildContext context, buttonState,
-                              Widget? child) {
+                          builder:
+                              (BuildContext context, buttonState, Widget? child) {
                             return FilledButton(
                               onPressed: () async {
                                 const snackBar = SnackBar(
                                   behavior: SnackBarBehavior.floating,
                                   content: Text('Berhasil login'),
                                 );
-                                if (_formKey.currentState?.validate() ??
-                                    false) {
+                                if (_formKey.currentState?.validate() ?? false) {
                                   FocusManager.instance.primaryFocus?.unfocus();
                                   if (buttonState == ButtonState.initial) {
                                     await _controller.login(
@@ -128,7 +117,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                   }
                                 }
                               },
-                              style: style,
                               child: (buttonState == ButtonState.loading)
                                   ? Container(
                                       width: 24,
@@ -139,10 +127,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                     )
                                   : const Text(
                                       'Masuk',
-                                      style: TextStyle(
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700,
-                                          letterSpacing: .5),
                                     ),
                             );
                           },
@@ -150,16 +134,18 @@ class _LoginScreenState extends State<LoginScreen> {
                       ],
                     ),
                   ),
-                ),
-                const Expanded(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(style: TextStyle(color: Colors.black38), 'ver1.0.0'),
-                    ],
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                            style: Theme.of(context).textTheme.bodySmall,
+                            'ver1.0.0'),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

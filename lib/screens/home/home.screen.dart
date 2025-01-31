@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:id_rumbuk_app/auth/auth.controller.dart';
-import 'package:id_rumbuk_app/model/entity/student.entity.dart';
 import 'package:id_rumbuk_app/screens/home/home.controller.dart';
+import 'package:id_rumbuk_app/screens/status/status.controller.dart';
 import 'package:id_rumbuk_app/widgets/news_card.widget.dart';
 import 'package:id_rumbuk_app/widgets/simple_reservation_card.widget.dart';
 import 'package:id_rumbuk_app/widgets/simple_user_profile.widget.dart';
@@ -14,13 +13,16 @@ void showLayoutGuidelines() {
 }
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({Key? key}) : super(key: key);
+
+  final HomeController _homeController = Get.put(HomeController());
+  final StatusController _statusController = Get.put(StatusController());
 
   //final AuthController _authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    HomeController controller = Get.put(HomeController());
+    _homeController.refresh();
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -33,43 +35,52 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 24),
                 Obx(() {
                   return SimpleUserProfile(
-                      profileImageUrl: 'https://picsum.photos/200',
-                      profileUsername:
-                      controller.studentData.value.name ?? 'studentName',
+                      profileImageUrl: '',
+                      profileUsername: _homeController.studentData.value.name ??
+                          'studentName',
                       profileUserID:
-                      controller.studentData.value.studentId ?? 'studentId');
+                          _homeController.studentData.value.studentId ??
+                              'studentId');
                 }),
                 const SizedBox(height: 24),
                 //Text(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                        style: TextStyle(
-                            color: Colors.black87,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18),
-                        'Reservasi aktif'),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    if (controller.hasReservation <= 0)
-                      emptyReservationInfoCard(context)
-                    else
-                      ListView.builder(
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: 1,
-                        itemBuilder: (context, index) => Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: SimpleReservationCard(
-                              address: 'Gedung 1 Lantai 2',
-                              room: 'Ruangan 121',
-                              time: '07:15',
-                              statusCode: (index + 3).toString()),
+                Obx(
+                  () {
+                    List data = List.from(_statusController.selectedReservation);
+                    data.removeWhere((element) => element.status == '0');
+                    //var data = dataOri;
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                            style: TextStyle(
+                                color: Colors.black87,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18),
+                            'Reservasi aktif'),
+                        const SizedBox(
+                          height: 8,
                         ),
-                      )
-                  ],
+                        if (_homeController.hasReservation <= 0 || data.isEmpty)
+                          emptyReservationInfoCard(context)
+                        else
+                          ListView.builder(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: 2,
+                            itemBuilder: (context, index) => Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: SimpleReservationCard(
+                                  reservationId: data[index].id!,
+                                  address: '${data[index].room!.building!} ${data[index].room!.floor!}',
+                                  room: data[index].room!.room!,
+                                  time: data[index].room!.startTime!,
+                                  statusCode: data[index].status!),
+                            ),
+                          )
+                      ],
+                    );
+                  },
                 ),
                 const SizedBox(height: 24),
                 Column(
@@ -89,14 +100,17 @@ class HomeScreen extends StatelessWidget {
                           primary: false,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
-                            return const NewsCard(
-                                newsUrl: 'www.google.com',
-                                newsTitle:
-                                    'Google: mainstream search engine over global',
-                                newsDate: '20 Jan 24');
+                            return NewsCard(
+                              newsUrl: _homeController.newsData[index]['url'],
+                              newsTitle: _homeController.newsData[index]
+                                  ['title'],
+                              newsDate: _homeController.newsData[index]['date'],
+                              newsImageUrl: _homeController.newsData[index]
+                                  ['image'],
+                            );
                           },
                           separatorBuilder: (context, index) => const Divider(),
-                          itemCount: 5),
+                          itemCount: _homeController.newsData.length),
                     ),
                     // ListView(
                     //   physics: const NeverScrollableScrollPhysics(),
@@ -135,15 +149,16 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  List<Widget> generateFakePosts() {
-    final posts = <Widget>[];
-    for (var i = 1; i <= 5; i++) {
-      posts.add(const NewsCard(
-          newsUrl: 'www.google.com',
-          newsTitle: 'Google: mainstream search engine over global',
-          newsDate: '20 Jan 24'));
-      posts.add(const Divider());
-    }
-    return posts;
-  }
+  // List<Widget> generateFakePosts() {
+  //   final posts = <Widget>[];
+  //   var data = _homeController.newsData;
+  //   for (var i = 1; i <= data.length; i++) {
+  //     posts.add(NewsCard(
+  //         newsUrl: data[i]['url'],
+  //         newsTitle: data[i]['title'],
+  //         newsDate: data[i]['date']));
+  //     posts.add(const Divider());
+  //   }
+  //   return posts;
+  // }
 }

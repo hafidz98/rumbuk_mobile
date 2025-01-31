@@ -35,7 +35,7 @@ class _ReservationOrderState extends State<ReservationOrder> {
     var roomTimeSlot = reservationController.buildingRoomList[widget.indexB]
         .floors![widget.indexF].rooms![widget.indexR].timeSlot;
 
-    final dateFormatter = DateFormat('d MMMM yyyy');
+    final dateFormatter = DateFormat('E, d MMMM yyyy', 'id_ID');
     return SizedBox(
       width: MediaQuery.of(context).size.width,
       child: Padding(
@@ -133,18 +133,16 @@ class _ReservationOrderState extends State<ReservationOrder> {
                   autovalidateMode: AutovalidateMode.onUserInteraction,
                   controller: reservationController.activityControllerText,
                   decoration: const InputDecoration(
+                      fillColor: Colors.white,
                       border: OutlineInputBorder(),
                       hintText: 'Kegiatan atau aktivitas'),
                 ),
               ),
               const Expanded(child: SizedBox()),
               FilledButton(
-                  style: FilledButton.styleFrom(
-                    textStyle: const TextStyle(fontSize: 20),
-                    minimumSize: const Size.fromHeight(50),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(4)),
-                  ),
+                  style:  FilledButton.styleFrom(
+                      backgroundColor:
+                          Theme.of(context).colorScheme.secondary),
                   child: reservationController.reservationLoading.value
                       ? Container(
                           width: 24,
@@ -153,7 +151,7 @@ class _ReservationOrderState extends State<ReservationOrder> {
                           child: const CircularProgressIndicator(
                               color: Colors.white, strokeWidth: 3),
                         )
-                      : const Text('Pinjam ruangan ini'),
+                      : Text('Pinjam ruangan ini',style: Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 18.0),),
                   onPressed: () async {
                     if (_formKey.currentState?.validate() ?? false) {
                       await reservationController.makeReservation(context);

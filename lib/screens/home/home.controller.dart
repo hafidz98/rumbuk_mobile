@@ -26,7 +26,9 @@ class HomeController extends GetxController {
   }
 
   @override
-  void refresh() {
+  Future<void> refresh() async{
+    await getStudent();
+    await getReservation();
     studentData.refresh();
   }
 
@@ -42,13 +44,6 @@ class HomeController extends GetxController {
       studentData.refresh();
     } else {
       _authController.logOut();
-      // Get.defaultDialog(
-      //     middleText: 'User not found!',
-      //     textConfirm: 'OK',
-      //     onConfirm: () {
-      //       refresh();
-      //       Get.back();
-      //     });
     }
     studentData.refresh();
 
@@ -63,4 +58,43 @@ class HomeController extends GetxController {
   Future<void> getReservation() async {
     hasReservation.value = 1;
   }
+
+  var newsData = [
+    {
+      'url':
+      'https://teknokrat.ac.id/universitas-teknokrat-indonesia-jadi-tuan-rumah-umkm-msib-inisiasi-apindo-lampung/',
+      'title':
+      'Universitas Teknokrat Indonesia Jadi Tuan Rumah UMKM MSIB Inisiasi Apindo Lampung',
+      'date':'2024-05-27',
+      'image':
+      'https://teknokrat.ac.id/wp-content/uploads/2024/05/WhatsApp-Image-2024-05-27-at-07.46.57.jpeg'
+    },
+    {
+      'url':
+      'https://teknokrat.ac.id/kampus-entrepreneur-lampung-anggota-dprd-lampung-rahmat-mirzani-djausal-apresiasi-teknokrat-entrepreneur-vaganza-2024-inkubator-bisnis-terus-ditumbuhkan/',
+      'title':
+      'Kampus Entrepreneur Lampung : Anggota DPRD Lampung Rahmat Mirzani Djausal Apresiasi Teknokrat Entrepreneur Vaganza 2024, Inkubator Bisnis Terus Ditumbuhkan',
+      'date':'2024-05-20',
+      'image':
+      'https://teknokrat.ac.id/wp-content/uploads/2024/05/Kampus-Entrepreneur-Lampung.jpg'
+    },
+    {
+      'url':
+      'https://teknokrat.ac.id/universitas-teknokrat-gelar-pentas-islami-ke-17-perkaya-wawasan-keislaman-generasi-muda/',
+      'title':
+      'Universitas Teknokrat Gelar Pentas Islami ke-17, Perkaya Wawasan Keislaman Generasi Muda',
+      'date':'2024-05-20',
+      'image':
+      'https://teknokrat.ac.id/wp-content/uploads/2024/05/IMG_20240519_094948.jpg'
+    },
+    {
+      'url':
+      'https://teknokrat.ac.id/mahasiswa-sastra-inggris-teknokrat-juara-di-alsa-national-english-competitions/',
+      'title':
+      'Mahasiswa Sastra Inggris Teknokrat Juara di ALSA National English Competitions',
+      'date':'2024-05-14',
+      'image':
+      'https://teknokrat.ac.id/wp-content/uploads/2024/05/IMG_20240508_170117.jpg'
+    }
+  ];
 }

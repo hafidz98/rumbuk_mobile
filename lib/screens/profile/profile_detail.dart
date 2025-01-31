@@ -18,6 +18,14 @@ class ProfileDetailScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.account_circle,size: 100.0,)
+                ],
+              ),
+              const SizedBox(height: 8),
               const Text(
                 'Info Akun',
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),

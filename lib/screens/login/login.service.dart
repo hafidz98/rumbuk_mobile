@@ -17,6 +17,9 @@ class LoginService extends GetConnect {
 
     if (response.statusCode == HttpStatus.ok) {
       var data = GenericResponse.fromJson(response.body);
+      if (data.data is String){
+        return null;
+      }
       return LoginResponse.fromJson(data.data, token);
     } else {
       return null;

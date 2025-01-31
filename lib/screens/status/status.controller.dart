@@ -27,16 +27,24 @@ class StatusController extends GetxController {
     _statusService = Get.put(StatusService());
 
     await getStatusReservation();
-    await getSelectedReservation('9');
+    await getSelectedReservation(selectedStatus.value?.value ?? '9');
   }
 
   Future<void> getSelectedReservation(String status) async {
     List<Reservation> selectedReserve = [];
-
+    await getStatusReservation();
     try {
       if (status == "9") {
         selectedReservation.clear();
         selectedReservation.addAll(reserveList);
+        selectedReservation.sort((a, b) {
+          var indexA = a.status;
+          var indexB = b.status;
+          if((indexA! == '0') && (indexB! == '0')){
+            return 1;
+          }
+          return indexA.compareTo(indexB!);
+        },);
       } else {
         selectedReserve = reserveList
             .where((reserveStatus) => reserveStatus.status == status)
@@ -56,7 +64,10 @@ class StatusController extends GetxController {
     try {
       final response = await _statusService.fetchStatusReservation(
           _authController.getToken(), _authController.getStudentIdFromBox());
-      if (response.data != null) {
+      if (response.data is String){
+        throw response.data.toString();
+      }
+      if (response.data != null && response.data is! String) {
         for (int i = 0; i < response.data!.length; i++) {
           reservations.add(response.data![i]);
         }
@@ -66,6 +77,12 @@ class StatusController extends GetxController {
     } catch (e) {
       throw Exception(e.toString());
     }
+  }
+
+  @override
+  Future<void> refresh() async {
+    await getStatusReservation();
+    await getSelectedReservation(selectedStatus.value?.value ?? '9');
   }
 }
 

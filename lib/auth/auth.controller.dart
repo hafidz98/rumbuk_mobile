@@ -3,18 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:get/get.dart';
 import 'package:id_rumbuk_app/auth/auth.local.controller.dart';
+import 'package:id_rumbuk_app/screens/home/home.controller.dart';
 import 'cache.controller.dart';
 
 class AuthController extends GetxController with CacheController {
   late final AuthLocalController _authLocalController;
+  //late final HomeController _homeController;
 
   final isLogged = false.obs;
-  var isPINActive = false.obs;
-  var isUnlock = false.obs;
+  final isPINActive = false.obs;
+  final isUnlock = false.obs;
 
   void logOut() {
     isLogged.value = false;
+    isPINActive.value = false;
+    isUnlock.value = false;
     removeToken();
+    removeFingerprint();
+    removePIN();
   }
 
   void login(String? token, studentId) async {
@@ -54,6 +60,8 @@ class AuthController extends GetxController with CacheController {
     }
   }
 
+  void removePINAuth(BuildContext context) {}
+
   void activePINAuth(BuildContext context) {
     if (isPINActive.value) {
       screenLock(
@@ -63,13 +71,14 @@ class AuthController extends GetxController with CacheController {
         onUnlocked: () {
           removePIN();
           isPINActive.value = false;
-          isUnlock.value = false;
+          Get.back();
+          //isUnlock.value = false;
           //Navigator.of(context).pop();
         },
       );
     } else {
       screenLockCreate(
-        context: context,
+        context: Get.context!,
         onConfirmed: (pinValue) {
           savePIN(pinValue);
           isPINActive.value = true;
@@ -77,7 +86,7 @@ class AuthController extends GetxController with CacheController {
           if (kDebugMode) {
             print(isLogged.value);
           }
-          //Navigator.of(context).pop();
+          Get.back();
         },
         title: const Text('Masukkan PIN baru'),
         confirmTitle: const Text('Konfirmasi PIN baru'),
@@ -86,22 +95,42 @@ class AuthController extends GetxController with CacheController {
   }
 
   Future<void> unlock(BuildContext context) async {
-    if (isPINActive.value || _authLocalController.isFingerprintActive.value) {
+    if (isPINActive.value) {
       screenLock(
         title: const Text('Masukkan PIN'),
         context: context,
         correctString: getPIN().toString(),
         onUnlocked: () {
           isUnlock.value = true;
-          Navigator.of(context).pop();
+          Get.back();
         },
+        // customizedButtonChild: const Icon(
+        //   Icons.fingerprint,
+        // ),
+        // customizedButtonTap: () => _authLocalController.authFingerprint(),
+        // onOpened: () async {
+        //   await _authLocalController.authFingerprint(context)
+        //       ? isUnlock.value = true
+        //       : false;
+        // },
+        canCancel: false,
       );
     }
   }
 
   @override
-  void onInit() {
+  Future<void> onInit() async {
     super.onInit();
     _authLocalController = Get.put(AuthLocalController());
+    isUnlock.value = false;
+    // _homeController = Get.put(HomeController());
+    //
+    // await _homeController.getStudent();
+    // await _homeController.getReservation();
+  }
+
+  @override
+  void onClose() {
+    isUnlock.value = false;
   }
 }

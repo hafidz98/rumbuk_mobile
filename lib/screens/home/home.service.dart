@@ -28,9 +28,6 @@ class HomeService extends GetConnect {
 
     var data = GenericResponse.fromJson(response.body);
     if (data.code == HttpStatus.ok && data.data != '') {
-      // if(data.data == ''){
-      //
-      // }
       return StudentResponse.fromJson(data.data);
     } else if (data.code == HttpStatus.unauthorized) {
       if (kDebugMode) {

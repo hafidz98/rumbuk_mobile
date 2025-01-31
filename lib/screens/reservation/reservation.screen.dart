@@ -13,6 +13,7 @@ class ReservationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    reservationController.refresh();
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: SafeArea(
@@ -26,7 +27,6 @@ class ReservationScreen extends StatelessWidget {
                 children: [
                   const CustomDatePicker(),
                   const SizedBox(height: 8),
-                  //Obx(() => const BuildingChipButton()),
                   BuildingChipButton(),
                 ],
               ),
@@ -39,16 +39,6 @@ class ReservationScreen extends StatelessWidget {
                       .buildingRoomList[
                           reservationController.selectedChipButton.value]
                       .floors;
-                  // int itemCount = 0;
-                  // if (itemFloors != null ) {
-                  //   itemCount = itemFloors.length;
-                  // }
-                  // return FutureBuilder<void>(
-                  //   future: reservationController
-                  //       .buildingRoomList.length,
-                  //   builder: (context, snapshot) {
-                  //
-                  // },);
                   return ListView.builder(
                     primary: false,
                     itemCount: itemFloors?.length ?? 0,
@@ -72,29 +62,26 @@ class ReservationScreen extends StatelessWidget {
 }
 
 class RoomContentCard extends StatelessWidget {
-  const RoomContentCard({Key? key, required this.indexF, required this.indexB})
+  RoomContentCard({Key? key, required this.indexF, required this.indexB})
       : super(key: key);
+
+  final ReservationController _reservationController = Get.find();
 
   final int indexB;
   final int indexF;
 
   @override
   Widget build(BuildContext context) {
-    final ReservationController reservationController = Get.find();
-    //var buildingId = reservationController.selectedBuildingId.value;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Obx(() => Text(
-            reservationController
+            _reservationController
                 .buildingRoomList[indexB].floors![indexF].name!,
             style: Theme.of(context).textTheme.titleMedium)),
-        // Text(reservationController.buildingRoomList[buildingId].floors![indexF].name!,
-        //     style: Theme.of(context).textTheme.titleMedium),
         Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.symmetric(vertical: 8.0),
           child: Container(
             width: MediaQuery.of(context).size.width,
             padding: const EdgeInsets.all(16),
@@ -109,7 +96,7 @@ class RoomContentCard extends StatelessWidget {
                 runSpacing: 4,
                 direction: Axis.horizontal,
                 children: List.generate(
-                  reservationController
+                  _reservationController
                       .buildingRoomList[indexB].floors![indexF].rooms!.length,
                   (index) => OutlinedButton(
                     style: OutlinedButton.styleFrom(
@@ -118,30 +105,41 @@ class RoomContentCard extends StatelessWidget {
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(4))),
                     onPressed: () async {
-                      await showModalBottomSheet(
+                      await showModalBottomSheet<void>(
                         isScrollControlled: true,
                         showDragHandle: true,
                         useSafeArea: true,
                         shape: const RoundedRectangleBorder(
                             borderRadius: BorderRadius.vertical(
-                                top: Radius.circular(32))),
+                                top: Radius.circular(24))),
                         context: context,
-                        builder: (context) => ReservationOrder(
-                          indexB: indexB,
-                          indexF: indexF,
-                          indexR: index,
-                        ),
-                      ).whenComplete(() => const SnackBar(
-                          behavior: SnackBarBehavior.floating,
-                          content: Text('Reservasi sukses')));
+                        builder: (context) {
+                          return SizedBox(
+                            height: MediaQuery.of(context).size.height * 3 / 4,
+                            child: ReservationOrder(
+                              indexB: indexB,
+                              indexF: indexF,
+                              indexR: index,
+                            ),
+                          );
+                        },
+                      );
+                      //     .whenComplete((){
+                      //   if (!_reservationController.reservationLoading.value) {
+                      //     return ScaffoldMessenger.of(context).showSnackBar(
+                      //         const SnackBar(
+                      //             behavior: SnackBarBehavior.floating,
+                      //             content: Text('Reservasi sukses')));
+                      //   }
+                      // });
                     },
                     child: FittedBox(
                         fit: BoxFit.fitWidth,
-                        child: Text(reservationController
-                            .buildingRoomList[indexB]
-                            .floors![indexF]
-                            .rooms![index]
-                            .name!)),
+                        child: Text(
+                          _reservationController.buildingRoomList[indexB]
+                              .floors![indexF].rooms![index].name!,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        )),
                   ),
                 ),
               ),
@@ -185,11 +183,6 @@ class CustomDatePicker extends StatefulWidget {
 }
 
 class _CustomDatePickerState extends State<CustomDatePicker> {
-  // final EasyInfiniteDateTimelineController _controller =
-  //     EasyInfiniteDateTimelineController();
-  // final DateTime _appsFirstDate = DateTime.now();
-  // DateTime _focusDate = DateTime.now().add(const Duration(days: 4));
-  // final DateTime _appsLastDate = DateTime.now().add(const Duration(days: 30));
   final ReservationController reservationController = Get.find();
 
   @override
@@ -202,9 +195,6 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
           (index) =>
               reservationController.appsFirstDate.add(Duration(days: index))),
       onDateChange: (selectedDate) {
-        // reservationController.focusDate = selectedDate;
-        // reservationController.selectedDate = selectedDate;
-        // debugPrint(selectedDate.toString());
         setState(() {
           reservationController.focusDate = selectedDate;
           reservationController.selectedDate = selectedDate;
@@ -213,7 +203,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
         });
       },
       timeLineProps: const EasyTimeLineProps(hPadding: 16),
-      activeColor: const Color(0xffFFBF9B),
+      activeColor: Theme.of(context).colorScheme.secondary,
       dayProps: const EasyDayProps(
         height: 56.0,
         width: 56.0,
@@ -225,6 +215,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
         ),
         activeDayStyle: DayStyle(
           dayNumStyle: TextStyle(
+            color: Colors.white,
             fontSize: 18.0,
             fontWeight: FontWeight.bold,
           ),
@@ -261,11 +252,6 @@ class BuildingChipButton extends StatelessWidget {
                 reservationController.selectedChipButton.value = selected
                     ? index
                     : reservationController.selectedChipButton.value;
-
-                // reservationController.selectedBuildingId.value =
-                //     reservationController.buildingList[index].id!;
-                // await reservationController.getRoomOnBuildingID(
-                //     reservationController.buildingList[index].id!);
               },
             ),
           ).toList(),
