@@ -16,7 +16,7 @@ class TAppTheme {
     colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.white,
       surface: Colors.white,
-      primary: const Color(0xffd78400),
+      primary: const Color(0xffff9c00),
       secondary: const Color(0xff394152),
     ),
     textTheme: TTextTheme.lightTextTheme,

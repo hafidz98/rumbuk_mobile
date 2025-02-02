@@ -49,6 +49,7 @@ dependencies:
   local_auth: ^2.1.8
   google_fonts: ^6.2.1
   dropdown_button2: ^2.3.9
+  flutter_launcher_icons: ^0.14.3
 
 dev_dependencies:
   flutter_test:
