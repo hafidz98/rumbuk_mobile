@@ -7,7 +7,7 @@ class TNavigationBarTheme {
       const NavigationBarThemeData(
     backgroundColor: Colors.white,
     elevation: 1,
-    iconTheme: MaterialStatePropertyAll(IconThemeData(
+    iconTheme: WidgetStatePropertyAll(IconThemeData(
       color: Colors.black
     )),
   );

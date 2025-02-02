@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:id_rumbuk_app/auth/auth.controller.dart';
+//import 'package:id_rumbuk_app/auth/auth.controller.dart';
 import 'package:id_rumbuk_app/screens/login/login.controller.dart';
+import 'package:id_rumbuk_app/widgets/custom_snackbar.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -12,7 +13,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final LoginController _controller = Get.put(LoginController());
-  final AuthController _authController = Get.find();
+  //final AuthController _authController = Get.find();
 
   final _userIdentityFieldController = TextEditingController();
   final _passwordFieldController = TextEditingController();
@@ -34,24 +35,42 @@ class _LoginScreenState extends State<LoginScreen> {
     // );
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: false,
       body: SafeArea(
-        child: SingleChildScrollView(
-          child: SizedBox(
-            height: MediaQuery.of(context).size.height,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          child: SingleChildScrollView(
+            physics:
+                ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
               child: Column(
                 children: [
-                  const Expanded(
-                      flex: 1, child: Center(child: Text('Rumbuk App'))),
+                  Center(
+                    child: SizedBox(
+                      height: 300,
+                      child: Image(
+                        image: AssetImage(
+                          'assets/image/login_img2.jpg',
+                        ),
+                        fit: BoxFit.fitWidth,
+                        width: 300,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    "Login",
+                    style: Theme.of(context).textTheme.headlineMedium,
+                  ),
+                  const SizedBox(height: 8),
                   Form(
                     key: _formKey,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                             style: Theme.of(context).textTheme.headlineSmall,
-                            'Silakan masuk untuk meminjaman ruangan'),
+                            'Silakan masuk\nuntuk meminjaman ruangan'),
                         const SizedBox(height: 36),
                         TextFormField(
                           validator: (value) => (value == null || value.isEmpty)
@@ -83,31 +102,37 @@ class _LoginScreenState extends State<LoginScreen> {
                                       : Icons.visibility)),
                               labelText: 'Kata sandi'),
                         ),
-                        // Row(
-                        //   children: [
-                        //     const Text('Lupa kata sandi?',
-                        //         style: TextStyle(color: Colors.black54)),
-                        //     TextButton(
-                        //       onPressed: () => ScaffoldMessenger.of(context)
-                        //           .showSnackBar(
-                        //               const SnackBar(content: Text("Oke"))),
-                        //       style: TextButton.styleFrom(),
-                        //       child: const Text('Ubah kata sandi'),
-                        //     )
-                        //   ],
-                        // ),
-                        const SizedBox(height: 32),
+                        const SizedBox(height: 8),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            // const Text('Lupa kata sandi?',
+                            //     style: TextStyle(color: Colors.black54)),
+                            TextButton(
+                              onPressed: () => CustomSnackBar.of(context)
+                                  .customSnackBar('Akan di implementasi'),
+                              style: TextButton.styleFrom(
+                                  foregroundColor: Colors.black),
+                              child: const Text(
+                                'Lupa kata sandi?',
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            )
+                          ],
+                        ),
+                        const SizedBox(height: 16),
                         ValueListenableBuilder<ButtonState>(
                           valueListenable: _controller.loginButtonNotifier,
-                          builder:
-                              (BuildContext context, buttonState, Widget? child) {
+                          builder: (BuildContext context, buttonState,
+                              Widget? child) {
                             return FilledButton(
                               onPressed: () async {
                                 const snackBar = SnackBar(
                                   behavior: SnackBarBehavior.floating,
                                   content: Text('Berhasil login'),
                                 );
-                                if (_formKey.currentState?.validate() ?? false) {
+                                if (_formKey.currentState?.validate() ??
+                                    false) {
                                   FocusManager.instance.primaryFocus?.unfocus();
                                   if (buttonState == ButtonState.initial) {
                                     await _controller.login(
@@ -125,25 +150,16 @@ class _LoginScreenState extends State<LoginScreen> {
                                       child: const CircularProgressIndicator(
                                           color: Colors.white, strokeWidth: 3),
                                     )
-                                  : const Text(
-                                      'Masuk',
-                                    ),
+                                  : const Text('Masuk'),
                             );
                           },
                         )
                       ],
                     ),
                   ),
-                  Expanded(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Text(
-                            style: Theme.of(context).textTheme.bodySmall,
-                            'ver1.0.0'),
-                      ],
-                    ),
-                  ),
+                  // Text(
+                  //     style: Theme.of(context).textTheme.bodySmall,
+                  //     'ver1.0.0'),
                 ],
               ),
             ),

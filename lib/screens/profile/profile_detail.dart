@@ -2,16 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_rumbuk_app/screens/profile/profile.controller.dart';
 
+import '../../auth/auth.controller.dart';
+
 class ProfileDetailScreen extends StatelessWidget {
-  const ProfileDetailScreen({Key? key}) : super(key: key);
+  const ProfileDetailScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     ProfileController controller = Get.put(ProfileController());
+    final AuthController authController = Get.find();
 
     return Scaffold(
-      appBar:
-          AppBar(centerTitle: true, title: const Text('Profil'), elevation: 8),
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   title: const Text('Profil'),
+      //   elevation: 8,
+      // ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
@@ -22,13 +28,20 @@ class ProfileDetailScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.account_circle,size: 100.0,)
+                  Icon(
+                    Icons.account_circle,
+                    size: 100.0,
+                    color: Colors.grey,
+                  )
                 ],
               ),
               const SizedBox(height: 8),
               const Text(
                 'Info Akun',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Row(
@@ -103,7 +116,10 @@ class ProfileDetailScreen extends StatelessWidget {
               const SizedBox(height: 16),
               const Text(
                 'Akademik',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Row(
@@ -168,6 +184,23 @@ class ProfileDetailScreen extends StatelessWidget {
                     ),
                   ),
                 ],
+              ),
+              Spacer(),
+              TextButton(
+                style: ButtonStyle(
+                  splashFactory: InkSplash.splashFactory,
+                  visualDensity: VisualDensity.compact,
+                  padding: WidgetStateProperty.all(EdgeInsets.zero),
+                ),
+                onPressed: () => authController.logOut(),
+                child: const Text(
+                  'Keluar',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),

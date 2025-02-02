@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
-import 'package:id_rumbuk_app/auth/auth.controller.dart';
 import 'package:id_rumbuk_app/screens/home/home.controller.dart';
 import 'package:id_rumbuk_app/screens/status/status.controller.dart';
 import 'package:id_rumbuk_app/widgets/news_card.widget.dart';
@@ -13,7 +12,7 @@ void showLayoutGuidelines() {
 }
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({Key? key}) : super(key: key);
+  HomeScreen({super.key});
 
   final HomeController _homeController = Get.put(HomeController());
   final StatusController _statusController = Get.put(StatusController());

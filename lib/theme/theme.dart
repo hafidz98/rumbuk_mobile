@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:id_rumbuk_app/theme/cutom_theme/bottom_navigation_bar_theme.dart';
-import 'package:id_rumbuk_app/theme/cutom_theme/bottom_sheet_theme.dart';
-import 'package:id_rumbuk_app/theme/cutom_theme/elevated_button_theme.dart';
-import 'package:id_rumbuk_app/theme/cutom_theme/filled_button_theme.dart';
-import 'package:id_rumbuk_app/theme/cutom_theme/navigation_bar_theme.dart';
-import 'package:id_rumbuk_app/theme/cutom_theme/text_theme.dart';
+import 'package:id_rumbuk_app/theme/custom_theme/bottom_navigation_bar_theme.dart';
+import 'package:id_rumbuk_app/theme/custom_theme/bottom_sheet_theme.dart';
+import 'package:id_rumbuk_app/theme/custom_theme/elevated_button_theme.dart';
+import 'package:id_rumbuk_app/theme/custom_theme/filled_button_theme.dart';
+import 'package:id_rumbuk_app/theme/custom_theme/navigation_bar_theme.dart';
+import 'package:id_rumbuk_app/theme/custom_theme/text_theme.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class TAppTheme {
@@ -15,9 +15,8 @@ class TAppTheme {
     fontFamily: GoogleFonts.roboto().fontFamily,
     colorScheme: ColorScheme.fromSeed(
         seedColor: Colors.white,
-      background: Colors.white,
       surface: Colors.white,
-      primary: const Color(0xffffaf37),
+      primary: const Color(0xffd78400),
       secondary: const Color(0xff394152),
     ),
     textTheme: TTextTheme.lightTextTheme,

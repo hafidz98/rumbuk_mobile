@@ -7,7 +7,7 @@ import 'package:id_rumbuk_app/screens/reservation/reservation.order.screen.dart'
 import '../../widgets/custom_chip.widget.dart';
 
 class ReservationScreen extends StatelessWidget {
-  ReservationScreen({Key? key}) : super(key: key);
+  ReservationScreen({super.key});
   final ReservationController reservationController =
       Get.put(ReservationController());
 
@@ -62,8 +62,7 @@ class ReservationScreen extends StatelessWidget {
 }
 
 class RoomContentCard extends StatelessWidget {
-  RoomContentCard({Key? key, required this.indexF, required this.indexB})
-      : super(key: key);
+  RoomContentCard({super.key, required this.indexF, required this.indexB});
 
   final ReservationController _reservationController = Get.find();
 
@@ -123,7 +122,9 @@ class RoomContentCard extends StatelessWidget {
                             ),
                           );
                         },
-                      );
+                      ).whenComplete(() {
+                        _reservationController.isSelectedRoomTimeButton = false.obs;
+                      },);
                       //     .whenComplete((){
                       //   if (!_reservationController.reservationLoading.value) {
                       //     return ScaffoldMessenger.of(context).showSnackBar(
@@ -153,8 +154,7 @@ class RoomContentCard extends StatelessWidget {
 
 class CustomFloatingActionButton extends StatelessWidget {
   const CustomFloatingActionButton(
-      {Key? key, required this.onPressed, required this.label})
-      : super(key: key);
+      {super.key, required this.onPressed, required this.label});
 
   final VoidCallback onPressed;
   final String label;
@@ -176,7 +176,7 @@ class CustomFloatingActionButton extends StatelessWidget {
 }
 
 class CustomDatePicker extends StatefulWidget {
-  const CustomDatePicker({Key? key}) : super(key: key);
+  const CustomDatePicker({super.key});
 
   @override
   State<CustomDatePicker> createState() => _CustomDatePickerState();
@@ -230,7 +230,7 @@ class _CustomDatePickerState extends State<CustomDatePicker> {
 }
 
 class BuildingChipButton extends StatelessWidget {
-  BuildingChipButton({Key? key}) : super(key: key);
+  BuildingChipButton({super.key});
   final ReservationController reservationController = Get.find();
 
   @override
@@ -246,7 +246,7 @@ class BuildingChipButton extends StatelessWidget {
             reservationController.buildingRoomList.length,
             (index) => CustomChoiceChip(
               label:
-                  'Gedung ${reservationController.buildingRoomList[index].name!}',
+                  reservationController.buildingRoomList[index].name!,
               selected: reservationController.selectedChipButton.value == index,
               onSelected: (selected) async {
                 reservationController.selectedChipButton.value = selected

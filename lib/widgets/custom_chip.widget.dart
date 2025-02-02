@@ -7,15 +7,14 @@ class CustomChoiceChip extends StatelessWidget {
   final bool disabled;
 
   const CustomChoiceChip(
-      {Key? key, required this.label, required this.selected, this.onSelected, this.disabled = false})
-      : super(key: key);
+      {super.key, required this.label, required this.selected, this.onSelected, this.disabled = false});
 
   @override
   Widget build(BuildContext context) {
     return ChoiceChip(
-      selectedColor: Theme.of(context).colorScheme.secondary,
+      selectedColor: Theme.of(context).colorScheme.primary,
       label: Text(label),
-      labelStyle: selected ? null : const TextStyle(color: Colors.black),
+      labelStyle: selected ? TextStyle(color: Colors.white) : const TextStyle(color: Colors.black),
       selected: selected,
       onSelected: disabled ? null : onSelected,
       disabledColor: disabled ? Colors.grey : null,

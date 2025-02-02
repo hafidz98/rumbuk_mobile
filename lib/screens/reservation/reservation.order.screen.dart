@@ -7,11 +7,10 @@ import '../../widgets/custom_chip.widget.dart';
 
 class ReservationOrder extends StatefulWidget {
   const ReservationOrder(
-      {Key? key,
+      {super.key,
       required this.indexB,
       required this.indexF,
-      required this.indexR})
-      : super(key: key);
+      required this.indexR});
 
   final int indexB;
   final int indexF;
@@ -51,6 +50,17 @@ class _ReservationOrderState extends State<ReservationOrder> {
                   Text('Ruang', style: Theme.of(context).textTheme.titleMedium),
                   Text(
                       '${roomData.name}\n${buildingData.name}, ${floorData.name}',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                      textAlign: TextAlign.end),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('Gedung, Lantai',
+                      style: Theme.of(context).textTheme.titleMedium),
+                  Text('${buildingData.name}, ${floorData.name}',
                       style: Theme.of(context).textTheme.bodyLarge,
                       textAlign: TextAlign.end),
                 ],
@@ -140,9 +150,9 @@ class _ReservationOrderState extends State<ReservationOrder> {
               ),
               const Expanded(child: SizedBox()),
               FilledButton(
-                  style:  FilledButton.styleFrom(
-                      backgroundColor:
-                          Theme.of(context).colorScheme.secondary),
+                  style: FilledButton.styleFrom(
+                    backgroundColor: Theme.of(context).colorScheme.secondary,
+                  ),
                   child: reservationController.reservationLoading.value
                       ? Container(
                           width: 24,
@@ -151,7 +161,13 @@ class _ReservationOrderState extends State<ReservationOrder> {
                           child: const CircularProgressIndicator(
                               color: Colors.white, strokeWidth: 3),
                         )
-                      : Text('Pinjam ruangan ini',style: Theme.of(context).textTheme.labelLarge!.copyWith(fontSize: 18.0),),
+                      : Text(
+                          'Pinjam ruangan ini',
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelLarge!
+                              .copyWith(fontSize: 18.0),
+                        ),
                   onPressed: () async {
                     if (_formKey.currentState?.validate() ?? false) {
                       await reservationController.makeReservation(context);

@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_rumbuk_app/screens/status/status.controller.dart';
 
-import '../../widgets/simple_reservation_card.widget.dart';
+import 'package:id_rumbuk_app/widgets/simple_reservation_card.widget.dart';
 
 class StatusScreen extends StatefulWidget {
-  const StatusScreen({Key? key}) : super(key: key);
+  const StatusScreen({super.key});
 
   @override
   State<StatusScreen> createState() => _StatusScreenState();

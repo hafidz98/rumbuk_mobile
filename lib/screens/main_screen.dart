@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_rumbuk_app/auth/auth.controller.dart';
 import 'package:id_rumbuk_app/screens/home/home.screen.dart';
-import 'package:id_rumbuk_app/screens/profile/profile.dart';
+//import 'package:id_rumbuk_app/screens/profile/profile.dart';
+import 'package:id_rumbuk_app/screens/profile/profile_detail.dart';
 import 'package:id_rumbuk_app/screens/reservation/reservation.screen.dart';
 import 'package:id_rumbuk_app/screens/status/status.screen.dart';
 
@@ -36,7 +37,7 @@ class _MainScreenState extends State<MainScreen> with WidgetsBindingObserver {
         HomeScreen(),
         ReservationScreen(),
         const StatusScreen(),
-        ProfileScreen()
+        ProfileDetailScreen()
       ][selectedPageIndex],
       bottomNavigationBar: BottomNavigationBar(
         selectedItemColor: Theme.of(context).colorScheme.primary,

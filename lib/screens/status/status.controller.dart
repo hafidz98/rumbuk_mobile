@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:id_rumbuk_app/auth/auth.controller.dart';
@@ -5,8 +6,8 @@ import 'package:id_rumbuk_app/screens/status/dto/status_response.dart';
 import 'package:id_rumbuk_app/screens/status/status.service.dart';
 
 class StatusController extends GetxController {
-  late final AuthController _authController;
-  late final StatusService _statusService;
+  late AuthController _authController;
+  late StatusService _statusService;
 
   final isLoading = false.obs;
 
@@ -28,6 +29,10 @@ class StatusController extends GetxController {
 
     await getStatusReservation();
     await getSelectedReservation(selectedStatus.value?.value ?? '9');
+
+    if (kDebugMode) {
+      print('[Isi Status] : $selectedReservation');
+    }
   }
 
   Future<void> getSelectedReservation(String status) async {

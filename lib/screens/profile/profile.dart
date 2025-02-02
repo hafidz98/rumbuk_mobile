@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screen_lock/flutter_screen_lock.dart';
+//import 'package:flutter_screen_lock/flutter_screen_lock.dart';
 import 'package:get/get.dart';
 import 'package:id_rumbuk_app/auth/auth.controller.dart';
 import 'package:id_rumbuk_app/auth/auth.local.controller.dart';
@@ -8,7 +8,7 @@ import 'package:id_rumbuk_app/screens/profile/profile_detail.dart';
 import 'package:id_rumbuk_app/widgets/simple_user_profile.widget.dart';
 
 class ProfileScreen extends StatelessWidget {
-  ProfileScreen({Key? key}) : super(key: key);
+  ProfileScreen({super.key});
   final ProfileController _profileController = Get.put(ProfileController());
   final AuthController _authController = Get.find();
 
@@ -63,7 +63,7 @@ class ProfileScreen extends StatelessWidget {
                   style: ButtonStyle(
                       splashFactory: InkSplash.splashFactory,
                       visualDensity: VisualDensity.compact,
-                      padding: MaterialStateProperty.all(EdgeInsets.zero)),
+                      padding: WidgetStateProperty.all(EdgeInsets.zero)),
                   onPressed: () {
                     _authController.logOut();
                   },
@@ -83,7 +83,7 @@ class ProfileScreen extends StatelessWidget {
 }
 
 class _PasscodeWidget extends StatelessWidget {
-  const _PasscodeWidget({Key? key}) : super(key: key);
+  const _PasscodeWidget();
 
   @override
   Widget build(BuildContext context) {
@@ -109,7 +109,7 @@ class _PasscodeWidget extends StatelessWidget {
 }
 
 class _FingerprintWidget extends StatelessWidget {
-  const _FingerprintWidget({Key? key}) : super(key: key);
+  const _FingerprintWidget();
 
   @override
   Widget build(BuildContext context) {
