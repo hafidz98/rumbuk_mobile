@@ -90,27 +90,57 @@ class ReservationController extends GetxController {
 
     printInfo(info: '> makeReservation(): [reqdata]:$reqData');
 
+    String? message;
+
     try {
-      await _reservationService.createReservation(
+      var dataMsg = await _reservationService.createReservation(
           _authController.getToken(), reqData.toJson());
+      message = dataMsg;
     } catch (e) {
       throw Exception(e.toString());
     } finally {
+      final status = BookingStatus.fromString(message!);
       activityControllerText.clear();
       reservationLoading.value = false;
       await getAvailRoomData();
       if (context.mounted) {
         Navigator.of(context).pop();
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
             behavior: SnackBarBehavior.floating,
-            content: Text('Reservasi sukses')));
+            content: Text(status.message),
+          ),
+        );
       }
     }
   }
 
   @override
-  Future<void> refresh() async{
+  Future<void> refresh() async {
     await getAvailRoomData();
+  }
+}
+
+enum BookingStatus {
+  alreadyReserved('Ruangan sudah dipinjam'),
+  successBooked('Peminjaman berhasil');
+
+  final String message;
+  const BookingStatus(this.message);
+
+  factory BookingStatus.fromString(String? status) {
+    if (status == null) {
+      throw ArgumentError('Galat sistem');
+    }
+
+    switch (status) {
+      case 'already_reserved':
+        return BookingStatus.alreadyReserved;
+      case 'success_booked':
+        return BookingStatus.successBooked;
+      default:
+        throw ArgumentError('Galat sistem: $status');
+    }
   }
 }
 

@@ -30,6 +30,16 @@ Future main() async {
   //runApp(const LoginScreen());
 }
 
+class MobileView extends StatelessWidget {
+  const MobileView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+
 class MyApp extends StatefulWidget {
   const MyApp({super.key});
 

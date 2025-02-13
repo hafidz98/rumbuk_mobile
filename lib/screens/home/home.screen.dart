@@ -66,7 +66,7 @@ class HomeScreen extends StatelessWidget {
                           ListView.builder(
                             shrinkWrap: true,
                             physics: const NeverScrollableScrollPhysics(),
-                            itemCount: 2,
+                            itemCount: data.isEmpty ? 0 : (data.length > 2 ? 2 : data.length),
                             itemBuilder: (context, index) => Padding(
                               padding: const EdgeInsets.only(bottom: 8),
                               child: SimpleReservationCard(

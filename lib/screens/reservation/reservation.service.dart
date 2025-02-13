@@ -1,9 +1,13 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:get/get_connect/http/src/exceptions/exceptions.dart';
 import 'package:id_rumbuk_app/exception/network.exception.dart';
 import 'package:id_rumbuk_app/model/dto/api.config.dart';
 import 'package:id_rumbuk_app/screens/reservation/dto/avail_room_response.dart';
 import 'package:id_rumbuk_app/screens/reservation/dto/building_response.dart';
+import 'package:id_rumbuk_app/screens/reservation/dto/reservation_create_response.dart';
 
 class ReservationService extends GetConnect {
   final String apiEndpoint = ApiConfig.baseUrl;
@@ -57,7 +61,7 @@ class ReservationService extends GetConnect {
     }
   }
 
-  Future<void> createReservation(String? token, req) async {
+  Future<String?> createReservation(String? token, req) async {
     var requestHeader = {
       'Content-type': 'application/json',
       'Accept': 'application/json',
@@ -76,6 +80,15 @@ class ReservationService extends GetConnect {
           message: response.statusText!,
         );
       }
+
+      var data = ReservationCreateResponse.fromJson(response.body);
+      var dataBody = data.message;
+
+      if (kDebugMode) {
+        print("data message ${data.message}");
+      }
+
+      return dataBody;
     } catch (e) {
       throw FormatException(e.toString());
     }
