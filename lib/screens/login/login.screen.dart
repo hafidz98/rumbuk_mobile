@@ -35,13 +35,12 @@ class _LoginScreenState extends State<LoginScreen> {
     // );
 
     return Scaffold(
-      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomInset: true,
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
           child: SingleChildScrollView(
-            physics:
-                ClampingScrollPhysics(parent: NeverScrollableScrollPhysics()),
+            scrollDirection: Axis.vertical,
             child: SizedBox(
               height: MediaQuery.of(context).size.height,
               child: Column(

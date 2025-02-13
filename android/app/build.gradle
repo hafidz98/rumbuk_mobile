@@ -58,18 +58,6 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-
-//    applicationVariants.all { variant ->
-//        variant.outputs.all { output ->
-//            def projectName = "rumbuk_app" // Ganti dengan nama yang diinginkan
-//            def buildType = variant.buildType.name
-//            def versionName = variant.versionName
-//            def versionCode = variant.versionCode
-//
-//            output.outputFileName = "${projectName}_v${versionName}_${versionCode}_${buildType}.apk"
-//        }
-//    }
-
 }
 
 flutter {
