@@ -8,6 +8,14 @@ import 'package:id_rumbuk_app/screens/profile/dto/student.response.dart';
 class HomeService extends GetConnect {
   final String apiEndpoint = ApiConfig.baseUrl + ApiConfig.student;
 
+  Future<void> fetchReservationStatus(String? token, String? studentId) async {
+    Map<String, String> requestHeader = {
+      'Content-type': 'application/json',
+      'Accept': 'application/json',
+      'X-JWT-TOKEN-KEY': '$token'
+    };
+  }
+
   Future<StudentResponse?> fetchStudent(String? token, studentId) async {
     Map<String, String> requestHeader = {
       'Content-type': 'application/json',
@@ -15,12 +23,13 @@ class HomeService extends GetConnect {
       'X-JWT-TOKEN-KEY': '$token'
     };
 
-    final response = await get('$apiEndpoint/$studentId', headers: requestHeader);
+    final response =
+        await get('$apiEndpoint/$studentId', headers: requestHeader);
 
-    if (response.statusCode == HttpStatus.ok) {
-      var data = GenericResponse.fromJson(response.body);
+    var data = GenericResponse.fromJson(response.body);
+    if (data.code == HttpStatus.ok && data.data != '') {
       return StudentResponse.fromJson(data.data);
-    } else {
+    } else if (data.code == HttpStatus.unauthorized) {
       if (kDebugMode) {
         print('$apiEndpoint/$studentId');
         print(token);
@@ -28,5 +37,6 @@ class HomeService extends GetConnect {
       }
       return null;
     }
+    return null;
   }
 }

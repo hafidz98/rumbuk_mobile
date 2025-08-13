@@ -7,9 +7,11 @@ class SimpleReservationCard extends StatelessWidget {
       required this.address,
       required this.room,
       required this.time,
-      required this.statusCode})
+      required this.statusCode,
+      required this.reservationId})
       : super(key: key);
 
+  final int reservationId;
   final String address;
   final String room;
   final String time;
@@ -31,12 +33,16 @@ class SimpleReservationCard extends StatelessWidget {
             showDragHandle: true,
             useSafeArea: true,
             shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(32))),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
             context: context,
-            builder: (context) => const ReservationDetail(),);
-          ScaffoldMessenger.of(context)
-              .showSnackBar(const SnackBar(content: Text('reservasi')));
+            builder: (context) => SizedBox(
+                height: MediaQuery.of(context).size.height * 3 / 4,
+                child: ReservationDetail(
+                  id: reservationId,
+                )),
+          );
+          // ScaffoldMessenger.of(context)
+          //     .showSnackBar(const SnackBar(content: Text('reservasi')));
         },
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -130,7 +136,7 @@ class SimpleReservationCard extends StatelessWidget {
     }
   }
 
-  String textStatus(String code){
+  String textStatus(String code) {
     switch (code) {
       case '0':
         return 'Batal';

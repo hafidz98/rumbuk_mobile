@@ -1,23 +1,53 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:id_rumbuk_app/screens/profile/profile.controller.dart';
 
-class ProfileDetailScreen extends StatelessWidget {
-  const ProfileDetailScreen({Key? key}) : super(key: key);
+import '../../auth/auth.controller.dart';
+
+class ProfileDetailScreen extends StatefulWidget {
+  const ProfileDetailScreen({super.key});
 
   @override
+  State<ProfileDetailScreen> createState() => _ProfileDetailScreenState();
+}
+
+class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
+  ProfileController controller = Get.put(ProfileController());
+  final AuthController authController = Get.find();
+  @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Profil'), elevation: 8),
+      // appBar: AppBar(
+      //   centerTitle: true,
+      //   title: const Text('Profil'),
+      //   elevation: 8,
+      // ),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              const Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.account_circle,
+                    size: 100.0,
+                    color: Colors.grey,
+                  )
+                ],
+              ),
+              const SizedBox(height: 8),
               const Text(
                 'Info Akun',
                 style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Row(
@@ -27,9 +57,11 @@ class ProfileDetailScreen extends StatelessWidget {
                     'Nama',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  Text(
-                    'Zentradi Bautista',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  Obx(
+                    () => Text(
+                      controller.studentData.value.name ?? 'studentName',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
                 ],
               ),
@@ -41,9 +73,22 @@ class ProfileDetailScreen extends StatelessWidget {
                     'Gender',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  Text(
-                    'Laki-laki',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  Obx(
+                    () {
+                      var gen = controller.studentData.value.gender;
+                      switch (gen) {
+                        case 'l':
+                          gen = 'Laki-laki';
+                        case 'p':
+                          gen = 'Perempuan';
+                        default:
+                          gen = 'studentGender';
+                      }
+                      return Text(
+                        gen,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      );
+                    },
                   ),
                 ],
               ),
@@ -55,30 +100,32 @@ class ProfileDetailScreen extends StatelessWidget {
                     'Surel',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  Text(
-                    'mail@campus.ac.id',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  Obx(
+                    () => Text(
+                      controller.studentData.value.email ?? 'studentEmail',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
                 ],
               ),
-              TextButton(
-                  style: ButtonStyle(
-                      splashFactory: InkSplash.splashFactory,
-                      visualDensity: VisualDensity.compact,
-                      padding: MaterialStateProperty.all(EdgeInsets.zero)),
-                  onPressed: () {},
-                  child: const Text(
-                    'Ganti kata sandi',
-                    style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold),
-                  )),
+              // TextButton(
+              //   style: ButtonStyle(
+              //       splashFactory: InkSplash.splashFactory,
+              //       visualDensity: VisualDensity.compact,
+              //       padding: MaterialStateProperty.all(EdgeInsets.zero)),
+              //   onPressed: () {},
+              //   child: const Text(
+              //     'Ganti kata sandi',
+              //     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              //   ),
+              // ),
               const SizedBox(height: 16),
               const Text(
                 'Akademik',
                 style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold),
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 8),
               Row(
@@ -88,9 +135,11 @@ class ProfileDetailScreen extends StatelessWidget {
                     'NPM',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  Text(
-                    '20240030',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  Obx(
+                    () => Text(
+                      controller.studentData.value.studentId ?? 'studentId',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
                 ],
               ),
@@ -102,9 +151,11 @@ class ProfileDetailScreen extends StatelessWidget {
                     'Angkatan',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  Text(
-                    '2024',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  Obx(
+                    () => Text(
+                      '${controller.studentData.value.batchYear ?? 'batchYear'}',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
                 ],
               ),
@@ -116,9 +167,11 @@ class ProfileDetailScreen extends StatelessWidget {
                     'Program Studi',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  Text(
-                    'Teknik Angkasa',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  Obx(
+                    () => Text(
+                      controller.studentData.value.major ?? 'studentMajor',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
                 ],
               ),
@@ -130,16 +183,41 @@ class ProfileDetailScreen extends StatelessWidget {
                     'Fakultas',
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
-                  Text(
-                    'Teknik Luar Angkasa',
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  Obx(
+                    () => Text(
+                      controller.studentData.value.faculty ?? 'studentFaculty',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
                 ],
+              ),
+              Spacer(),
+              TextButton(
+                style: ButtonStyle(
+                  splashFactory: InkSplash.splashFactory,
+                  visualDensity: VisualDensity.compact,
+                  padding: WidgetStateProperty.all(EdgeInsets.zero),
+                ),
+                onPressed: () => authController.logOut(),
+                child: const Text(
+                  'Keluar',
+                  style: TextStyle(
+                    color: Colors.red,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    controller.refresh();
+    super.initState();
   }
 }

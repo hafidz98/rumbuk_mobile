@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+//import 'package:flutter_screen_lock/flutter_screen_lock.dart';
+import 'package:get/get.dart';
+import 'package:id_rumbuk_app/auth/auth.controller.dart';
+import 'package:id_rumbuk_app/auth/auth.local.controller.dart';
+import 'package:id_rumbuk_app/screens/profile/profile.controller.dart';
 import 'package:id_rumbuk_app/screens/profile/profile_detail.dart';
 import 'package:id_rumbuk_app/widgets/simple_user_profile.widget.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({Key? key}) : super(key: key);
+  ProfileScreen({super.key});
+  final ProfileController _profileController = Get.put(ProfileController());
+  final AuthController _authController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    //ProfileController controller = Get.put(ProfileController());
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -15,37 +24,49 @@ class ProfileScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               InkWell(
+                highlightColor: Colors.transparent,
+                splashColor: Colors.transparent,
+                splashFactory: NoSplash.splashFactory,
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => ProfileDetailScreen()),
+                      builder: (context) => const ProfileDetailScreen()),
                 ),
                 child: Row(
                   children: [
                     Expanded(
-                      child: const SimpleUserProfile(
-                          profileImageUrl: 'https://picsum.photos/200',
-                          profileUsername: 'Adnan Rzifka',
-                          profileUserID: '24201003'),
+                      child: Obx(
+                        () => SimpleUserProfile(
+                            profileImageUrl: '',
+                            profileUsername:
+                                _profileController.studentData.value.name ??
+                                    'studentName',
+                            profileUserID:
+                                _profileController.studentData.value.studentId ??
+                                    'studentId'),
+                      ),
                     ),
-                    Icon(Icons.arrow_forward_ios_outlined)
+                    const Icon(Icons.arrow_forward_ios_outlined)
                   ],
                 ),
               ),
               const SizedBox(height: 8),
               const Divider(height: 24),
-              const Text('Keamanan aplikasi', style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18)),
+              const Text('Keamanan aplikasi',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
               const SizedBox(height: 8),
-              _PasscodeWidget(),
+              const _PasscodeWidget(),
               const SizedBox(height: 4),
-              _FingerprintWidget(),
+              //const _FingerprintWidget(),
               const Divider(height: 24),
               TextButton(
                   style: ButtonStyle(
                       splashFactory: InkSplash.splashFactory,
                       visualDensity: VisualDensity.compact,
-                      padding: MaterialStateProperty.all(EdgeInsets.zero)),
-                  onPressed: () {},
+                      padding: WidgetStateProperty.all(EdgeInsets.zero)),
+                  onPressed: () {
+                    _authController.logOut();
+                  },
                   child: const Text(
                     'Keluar',
                     style: TextStyle(
@@ -61,18 +82,12 @@ class ProfileScreen extends StatelessWidget {
   }
 }
 
-class _PasscodeWidget extends StatefulWidget {
-  const _PasscodeWidget({Key? key}) : super(key: key);
-
-  @override
-  State<_PasscodeWidget> createState() => _PasscodeWidgetState();
-}
-
-class _PasscodeWidgetState extends State<_PasscodeWidget> {
-  bool _isActive = false;
+class _PasscodeWidget extends StatelessWidget {
+  const _PasscodeWidget();
 
   @override
   Widget build(BuildContext context) {
+    AuthController authController = Get.find();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -80,31 +95,25 @@ class _PasscodeWidgetState extends State<_PasscodeWidget> {
           'Passcode(PIN)',
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        Switch(
-          value: _isActive,
-          onChanged: (value) {
-            setState(() {
-              _isActive = value;
-            });
-          },
-        )
+        Obx(
+          () => Switch(
+            value: authController.isPINActive.value,
+            onChanged: (value) {
+              authController.activePINAuth(context);
+            },
+          ),
+        ),
       ],
     );
   }
 }
 
-class _FingerprintWidget extends StatefulWidget {
-  const _FingerprintWidget({Key? key}) : super(key: key);
-
-  @override
-  State<_FingerprintWidget> createState() => _FingerprintWidgetState();
-}
-
-class _FingerprintWidgetState extends State<_FingerprintWidget> {
-  bool _isActive = false;
+class _FingerprintWidget extends StatelessWidget {
+  const _FingerprintWidget();
 
   @override
   Widget build(BuildContext context) {
+    AuthLocalController authLocalController = Get.find();
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -112,14 +121,16 @@ class _FingerprintWidgetState extends State<_FingerprintWidget> {
           'Fingerprint',
           style: Theme.of(context).textTheme.titleMedium,
         ),
-        Switch(
-          value: _isActive,
-          onChanged: (value) {
-            setState(() {
-              _isActive = value;
-            });
+        Obx(
+          () {
+            return Switch(
+              value: authLocalController.isFingerprintActive.value,
+              onChanged: (value) {
+                authLocalController.activeFpAuth();
+              },
+            );
           },
-        )
+        ),
       ],
     );
   }
