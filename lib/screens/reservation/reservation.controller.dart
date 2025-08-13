@@ -134,7 +134,7 @@ enum BookingStatus {
     }
 
     switch (status) {
-      case 'already_reserved':
+      case 'already_booked':
         return BookingStatus.alreadyReserved;
       case 'success_booked':
         return BookingStatus.successBooked;

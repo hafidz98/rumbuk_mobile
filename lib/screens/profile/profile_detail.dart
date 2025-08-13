@@ -4,13 +4,19 @@ import 'package:id_rumbuk_app/screens/profile/profile.controller.dart';
 
 import '../../auth/auth.controller.dart';
 
-class ProfileDetailScreen extends StatelessWidget {
+class ProfileDetailScreen extends StatefulWidget {
   const ProfileDetailScreen({super.key});
 
   @override
+  State<ProfileDetailScreen> createState() => _ProfileDetailScreenState();
+}
+
+class _ProfileDetailScreenState extends State<ProfileDetailScreen> {
+  ProfileController controller = Get.put(ProfileController());
+  final AuthController authController = Get.find();
+  @override
   Widget build(BuildContext context) {
-    ProfileController controller = Get.put(ProfileController());
-    final AuthController authController = Get.find();
+
 
     return Scaffold(
       // appBar: AppBar(
@@ -207,5 +213,11 @@ class ProfileDetailScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    controller.refresh();
+    super.initState();
   }
 }

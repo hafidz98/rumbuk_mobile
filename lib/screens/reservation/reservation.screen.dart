@@ -114,7 +114,7 @@ class RoomContentCard extends StatelessWidget {
                         context: context,
                         builder: (context) {
                           return SizedBox(
-                            height: MediaQuery.of(context).size.height * 3 / 4,
+                            //height: MediaQuery.of(context).size.height * 3 / 4,
                             child: ReservationOrder(
                               indexB: indexB,
                               indexF: indexF,

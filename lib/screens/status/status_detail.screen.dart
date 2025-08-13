@@ -4,7 +4,7 @@ import 'package:id_rumbuk_app/screens/status/status.controller.dart';
 import 'package:intl/intl.dart';
 
 class ReservationDetail extends StatelessWidget {
-  ReservationDetail({Key? key, required this.id}) : super(key: key);
+  ReservationDetail({super.key, required this.id});
   final StatusController _statusController = Get.find();
   final int id;
   
@@ -45,7 +45,7 @@ class ReservationDetail extends StatelessWidget {
               children: [
                 Text('Tanggal Reservasi',
                     style: Theme.of(context).textTheme.titleMedium),
-                Text(dateFormat.format(DateTime.parse(data.bookingDate!)),
+                Text(dateFormat.format(DateTime.parse(data.bookingDate!).toLocal()),
                     style: Theme.of(context).textTheme.bodyLarge),
               ],
             ),

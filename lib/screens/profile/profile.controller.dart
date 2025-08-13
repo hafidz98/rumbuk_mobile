@@ -30,4 +30,8 @@ class ProfileController extends GetxController{
     }
   }
 
+  @override
+  void refresh() {
+    _getStudentData();
+  }
 }
